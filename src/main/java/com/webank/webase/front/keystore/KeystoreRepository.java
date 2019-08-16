@@ -1,13 +1,8 @@
 package com.webank.webase.front.keystore;
 
-import com.webank.webase.front.contract.entity.Contract;
-import com.webank.webase.front.performance.Performance;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
-import javax.transaction.Transactional;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -24,7 +19,14 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface KeystoreRepository extends CrudRepository<KeyStoreInfo, String> {
+public interface KeystoreRepository extends CrudRepository<KeyStoreInfo, String>, 
+    JpaSpecificationExecutor<KeyStoreInfo> {
 
     public KeyStoreInfo findByAddress(String address);
+    
+    public KeyStoreInfo findByPrivateKey(String privateKey);
+    
+    public KeyStoreInfo findByUserNameAndType(String userName, int type);
+    
+    public List<KeyStoreInfo> findListByType(int type);
 }
