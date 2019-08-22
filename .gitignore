@@ -10,6 +10,8 @@
 ### Gradle template
 .gradle
 /build
+conf/
+h2/
 gradle.properties
 
 

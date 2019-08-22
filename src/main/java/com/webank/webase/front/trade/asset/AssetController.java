@@ -29,7 +29,7 @@ public class AssetController {
     public BigInteger assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
                                    @RequestParam String contractAddress,
                                    @RequestParam String userAddress,
-                                   @RequestParam int groupId)  {
+                                   @RequestParam(defaultValue = "1") int groupId)  {
         return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
     }
 }
