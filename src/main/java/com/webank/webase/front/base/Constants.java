@@ -2,6 +2,8 @@ package com.webank.webase.front.base;
 
 import java.math.BigInteger;
 import lombok.Data;
+import org.fisco.bcos.web3j.tx.gas.ContractGasProvider;
+import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +32,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = Constants.CONSTANT_PREFIX)
 public class Constants {
     public static final BigInteger GAS_PRICE = new BigInteger("1");
-    public static final BigInteger GAS_LIMIT = new BigInteger("100000000");
+    public static final BigInteger GAS_LIMIT = new BigInteger("2100000000");
+
+    public static ContractGasProvider contractGasProvider = new StaticGasProvider(GAS_PRICE,GAS_LIMIT);
     public static final BigInteger INITIAL_WEI_VALUE = new BigInteger("0");
 
     public static final String CNS_CONTRAC_TNAME = "ContractAbiMgr";
