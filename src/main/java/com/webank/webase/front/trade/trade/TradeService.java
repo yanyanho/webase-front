@@ -17,11 +17,16 @@ import org.fisco.bcos.web3j.crypto.Hash;
 import org.fisco.bcos.web3j.crypto.gm.sm3.Util;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.fisco.bcos.web3j.tuples.Tuple;
+import org.fisco.bcos.web3j.tuples.generated.Tuple9;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
+
+import static org.fisco.bcos.web3j.crypto.gm.sm3.Util.encodeHexString;
 
 @Slf4j
 @Service
@@ -76,11 +81,12 @@ public class TradeService {
     }
 
     private void dealWithReceipt(TransactionReceipt transactionReceipt) {
+        log.info("*********"+ transactionReceipt.getOutput());
         if ("0x16".equals(transactionReceipt.getStatus()) && transactionReceipt.getOutput().startsWith("0x08c379a0")) {
             throw new FrontException(DecodeOutputUtils.decodeOutputReturnString0x16(transactionReceipt.getOutput()));
         }
-        if ("0x0".equals(transactionReceipt.getStatus())) {
-            throw new FrontException(Thread.currentThread().getStackTrace()[1].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus());
+        if (!"0x0".equals(transactionReceipt.getStatus())) {
+            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus());
         }
     }
 
@@ -97,4 +103,23 @@ public class TradeService {
         return BAC001.load(assetAddress, web3j, credentials, Constants.contractGasProvider);
     }
 
+    public Map getContract(String contractId, int groupId, String userAddress, String htlcContractAddress) throws Exception {
+        HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
+        byte[] contractIdBytes = Util.hexStringToBytes(contractId.substring(2));
+        Tuple9<String, String, String, BigInteger, byte[], BigInteger, Boolean, Boolean, byte[]> output = hashedTimelockBAC001.getContract(contractIdBytes).send();
+        Map<String,Object> imap = new HashMap<>();
+
+       imap.put("sender", output.getValue1());
+       imap.put("receiver", output.getValue2());
+       imap.put("assetContract",output.getValue3());
+       imap.put("amount",  output.getValue4());
+       imap.put("hashlock",encodeHexString(output.getValue5()));
+       imap.put("timelock",output.getValue6());
+       imap.put("withdrawn",output.getValue7());
+       imap.put("refunded",output.getValue8());
+       imap.put("preimage",encodeHexString(output.getValue9()));
+
+        return imap;
+
+    }
 }
