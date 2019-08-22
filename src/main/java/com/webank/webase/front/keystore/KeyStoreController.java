@@ -32,7 +32,7 @@ public class KeyStoreController extends BaseController {
         @ApiImplicitParam(name = "userName", value = "user name", dataType = "String")
     })
     @RequestMapping(method = RequestMethod.GET)
-    public KeyStoreInfo getKeyStore(@RequestParam(required = true) boolean useAes, 
+    public KeyStoreInfo getKeyStore(@RequestParam(defaultValue = "false") boolean useAes,
             @RequestParam(required = false, defaultValue = "2") int type,
             @RequestParam(required = false) String userName) {
         return keyStoreService.createKeyStore(useAes, type, userName);
