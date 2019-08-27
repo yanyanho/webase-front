@@ -29,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.fisco.bcos.channel.handler.ChannelConnections;
 import org.fisco.bcos.channel.handler.GroupChannelConnectionsConfig;
+import org.fisco.bcos.web3j.crypto.Credentials;
+import org.fisco.bcos.web3j.precompile.cns.CnsService;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.DefaultBlockParameter;
@@ -61,6 +63,8 @@ public class Web3ApiService {
     GroupChannelConnectionsConfig groupChannelConnectionsConfig;
     @Autowired
     ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
+    private HashMap<Integer, CnsService> cnsServiceMap;
 
     private static Map<Integer, List<NodeStatusInfo>> nodeStatusMap = new HashMap<>();
     private static final Long CHECK_NODE_WAIT_MIN_MILLIS = 3000L;
@@ -483,6 +487,8 @@ public class Web3ApiService {
                 channelEthereumService.setChannelService(service1);
                 Web3j web3j1 = Web3j.build(channelEthereumService, service1.getGroupId());
                 web3jMap.put(Integer.valueOf(groupList.get(i)), web3j1);
+                Credentials credentials = Credentials.create("3bed914595c159cbce70ec5fb6aff3d6797e0c5ee5a7a9224a21cae8932d84a4");
+                cnsServiceMap.put(Integer.valueOf(groupList.get(i)), new CnsService(web3j1, credentials));
             }
         }
     }
