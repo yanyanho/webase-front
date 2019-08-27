@@ -21,12 +21,27 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import com.webank.webase.front.util.Tools;
+import org.apache.commons.codec.binary.Hex;
 import org.fisco.bcos.web3j.crypto.Credentials;
+import org.fisco.bcos.web3j.crypto.Hash;
+import org.fisco.bcos.web3j.crypto.gm.sm3.Util;
 import org.fisco.bcos.web3j.solidity.Abi;
 import org.junit.Test;
 
 public class AbiTest {
+
+    @Test
+    public void test() {
+
+     byte[] hash1 = Hash.sha256(Tools.stringToByte32Array("hello1"));
+      System.out.println(Util.getHexString(hash1,false));
+     String  hashchain ="e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490";
+       byte[] hashchi = Util.hexStringToBytes(hashchain);
+      System.out.println(1);
+    }
 
 
   @Test

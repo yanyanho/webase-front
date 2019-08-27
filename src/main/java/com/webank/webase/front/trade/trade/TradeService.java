@@ -48,7 +48,12 @@ public class TradeService {
         dealWithReceipt(transactionReceipt001);
 
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
-        byte[] hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+        byte[] hash ;
+        if(contractReq.getFlag()==1) {
+             hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+        } else {
+             hash = Util.hexStringToBytes(contractReq.getSecerte());
+        }
 
         TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), contractReq.getAmount()).send();
 
