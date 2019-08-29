@@ -28,12 +28,12 @@ public class AssetService {
         if (!userAddress.equals("0x0000000000000000000000000000000000000000")) {
             try {
                 if ("BAC001".equals(contractName)) {
-                    BAC001 bac001 = getBAC001(groupId, userAddress, contractAddress);
+                    BAC001 bac001 = getBAC001OnlyQueryChain(groupId, contractAddress);
                     BigInteger minUnit = bac001.minUnit().send();
                     BigInteger unit = BigInteger.valueOf((long) Math.pow(10, minUnit.doubleValue()));
                     balance = bac001.balance(userAddress).send().divide(unit);
                 } else {
-                    BAC002 bac002 = getBAC002(groupId, userAddress, contractAddress);
+                    BAC002 bac002 = getBAC002OnlyQueryChain(groupId,  contractAddress);
                     balance = bac002.balance(userAddress).send();
                 }
             } catch (Exception e) {
@@ -51,9 +51,61 @@ public class AssetService {
             Credentials credentials = keyStoreService.getCredentials(userAddress,false );
             return BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
         }
+
+        private BAC001 getBAC001OnlyQueryChain(int groupId , String assetAddress) {
+            Web3j web3j = web3jMap.get(groupId);
+            Credentials credentials = Credentials.create("2");
+            return BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
+        }
         private BAC002 getBAC002(int groupId, String userAddress, String assetAddress) {
             Web3j web3j = web3jMap.get(groupId);
             Credentials credentials = keyStoreService.getCredentials(userAddress,false );
             return BAC002.load(assetAddress, web3j, credentials, contractGasProvider);
         }
+        private BAC002 getBAC002OnlyQueryChain(int groupId , String assetAddress) {
+            Web3j web3j = web3jMap.get(groupId);
+            Credentials credentials = Credentials.create("2");
+            return BAC002.load(assetAddress, web3j, credentials, contractGasProvider);
+        }
+
+
+    public BACInfo assetInfo(String contractName, String contractAddress, int groupId) throws Exception {
+       if("BAC001".equals(contractName)) {
+           BAC001 bac001 = getBAC001OnlyQueryChain(groupId,  contractAddress);
+           String description = bac001.description().send();
+           BigInteger totalAmount = bac001.totalAmount().send();
+           BigInteger minUnit = bac001.minUnit().send();
+           String shortName = bac001.shortName().send();
+           Boolean status = bac001.suspended().send();
+           return new BACInfo(description, totalAmount, minUnit, shortName,status,contractAddress,contractName,groupId);
+       }
+       else {
+           BAC002 bac002 = getBAC002OnlyQueryChain(groupId, contractAddress);
+           String description = bac002.description().send();
+           BigInteger totalAmount = bac002.totalSupply().send();
+           String shortName = bac002.shortName().send();
+           Boolean status = bac002.suspended().send();
+           return new BACInfo(description, totalAmount, new BigInteger("0"), shortName,status,contractAddress,contractName,groupId);
+       }
+    }
+
+    public Boolean sendFund(SendReq sendReq, String contractName, String contractAddress, int groupId) throws Exception {
+        if("BAC001".equals(contractName)) {
+            BAC001 bac001 = getBAC001(groupId, sendReq.getFrom(), contractAddress);
+             String to = sendReq.getTo();
+             String data = sendReq.getData();
+            BigInteger minUnit = sendReq.getMinUnit();
+             if(sendReq.getMinUnit()== null) {
+                  minUnit = bac001.minUnit().send();
+             }
+             BigInteger value  = sendReq.getValue().multiply(minUnit);
+            BigInteger realAmount = BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply(value);
+            bac001.send(to,realAmount,data).send();
+        }
+        else {
+            BAC002 bac002 = getBAC002(groupId, sendReq.getFrom(), contractAddress);
+           bac002.sendFrom(sendReq.getFrom(),sendReq.getTo(),sendReq.getAssetId(),sendReq.getData().getBytes()).send();
+        }
+            return true;
+    }
 }

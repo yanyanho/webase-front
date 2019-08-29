@@ -1,15 +1,11 @@
 package com.webank.webase.front.trade.asset;
 
+import com.webank.webase.front.trade.request.RefundReq;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 
@@ -30,6 +26,22 @@ public class AssetController {
                                    @RequestParam String contractAddress,
                                    @RequestParam String userAddress,
                                    @RequestParam(defaultValue = "1") int groupId)  {
-        return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
+            return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
+    }
+
+    @ApiOperation(value = "assetInfo", notes = "Get asset's info")
+    @GetMapping("/info")
+    public BACInfo assetInfo(@RequestParam(defaultValue = "BAC001") String contractName,
+                             @RequestParam String contractAddress,
+                             @RequestParam(defaultValue = "1") int groupId) throws Exception {
+            return assetService.assetInfo(contractName,contractAddress,groupId);
+    }
+
+    @PostMapping("/transfer")
+    public Boolean assetTransfer( @RequestBody SendReq sendReq,
+                                @RequestParam(defaultValue = "BAC001") String contractName,
+                                @RequestParam String contractAddress,
+                                @RequestParam(defaultValue = "1") int groupId) throws Exception {
+          return   assetService.sendFund(sendReq,contractName,contractAddress,groupId);
     }
 }
