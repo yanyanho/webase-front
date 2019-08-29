@@ -39,6 +39,8 @@ public class TradeService {
     @Autowired
     KeyStoreService keyStoreService;
 
+    @Autowired
+    private  Map<Integer, String> htlcMap;
 
     public String newContract(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
 
@@ -126,5 +128,9 @@ public class TradeService {
 
         return imap;
 
+    }
+
+    public Map getHTLCAddress() {
+        return htlcMap;
     }
 }
