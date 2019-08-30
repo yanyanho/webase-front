@@ -1,5 +1,6 @@
 package com.webank.webase.front.trade.request;
 
+import com.webank.webase.front.trade.trade.InitiatorInfo;
 import lombok.Data;
 
 import java.math.BigInteger;
@@ -12,6 +13,6 @@ public class ContractReq {
     private BigInteger lockTime;
     private String assetContractAddress;
     private BigInteger amount;
-    private int flag=1;
 
+    private InitiatorInfo initiatorInfo;
 }

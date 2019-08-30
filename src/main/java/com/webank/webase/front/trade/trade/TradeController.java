@@ -21,7 +21,7 @@ public class TradeController {
     @Autowired
     TradeService tradeService;
 
-    @RequestMapping("/new-contract")
+    @RequestMapping("/new-contract-initiator")
     @ApiOperation(value = "new contract", httpMethod = "POST")
     public String createNewCrossContract(@RequestBody ContractReq contractReq,
                                          @RequestParam(defaultValue = "1") int groupId,
@@ -29,6 +29,16 @@ public class TradeController {
                                           @RequestParam String htlcContractAddress) throws Exception {
 
         return tradeService.newContract(contractReq,groupId,userAddress,htlcContractAddress);
+    }
+
+    @RequestMapping("/new-contract-receiver")
+    @ApiOperation(value = "new contract", httpMethod = "POST")
+    public String createNewCrossContractForReceive(@RequestBody ContractReq contractReq,
+                                         @RequestParam(defaultValue = "1") int groupId,
+                                          @RequestParam String userAddress,
+                                          @RequestParam String htlcContractAddress) throws Exception {
+
+        return tradeService.newContractForReceiver(contractReq,groupId,userAddress,htlcContractAddress);
     }
 
     @RequestMapping("/withdraw")
@@ -53,7 +63,7 @@ public class TradeController {
     }
 
     @RequestMapping("/contract")
-    @ApiOperation(value = "refund", httpMethod = "GET")
+    @ApiOperation(value = "contractInfo", httpMethod = "GET")
     public Map getContractInfo(@RequestParam String contractId,
                                @RequestParam(defaultValue = "1") int groupId,
                                @RequestParam String userAddress,
