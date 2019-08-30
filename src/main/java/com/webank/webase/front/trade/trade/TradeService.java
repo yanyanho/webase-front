@@ -87,7 +87,7 @@ public class TradeService {
         return transactionReceipt.getOutput();
     }
 
-    private void dealWithReceipt(TransactionReceipt transactionReceipt) {
+    public static void dealWithReceipt(TransactionReceipt transactionReceipt) {
         log.info("*********"+ transactionReceipt.getOutput());
         if ("0x16".equals(transactionReceipt.getStatus()) && transactionReceipt.getOutput().startsWith("0x08c379a0")) {
             throw new FrontException(DecodeOutputUtils.decodeOutputReturnString0x16(transactionReceipt.getOutput()));

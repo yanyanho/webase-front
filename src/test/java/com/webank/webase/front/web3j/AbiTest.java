@@ -39,6 +39,7 @@ public class AbiTest {
      byte[] hash1 = Hash.sha256(Tools.stringToByte32Array("hello1"));
       System.out.println(Util.getHexString(hash1,false));
      String  hashchain ="e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490";
+     String  hashchain1="0ee8c396eb4005554d2ee590de052203711496512b848db0dd8a380df0fcde20";
        byte[] hashchi = Util.hexStringToBytes(hashchain);
       System.out.println(1);
     }

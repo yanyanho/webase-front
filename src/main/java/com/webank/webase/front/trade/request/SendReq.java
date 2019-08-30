@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.asset;
+package com.webank.webase.front.trade.request;
 
 import lombok.Data;
 
