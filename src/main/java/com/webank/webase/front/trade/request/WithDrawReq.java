@@ -9,5 +9,6 @@ public class WithDrawReq {
 
     private String contractId;
     private String secerte;
+    private BigInteger value;
 
 }

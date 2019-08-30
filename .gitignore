@@ -34,4 +34,5 @@ gradle.properties
 /out
 /log
 /dist
+src/main/resources/application.yml
 
