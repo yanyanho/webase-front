@@ -1,6 +1,6 @@
 [
   {
-  // 获取私钥  get
+  // 获取私钥  get  给每个用户产生一个公私钥对， 新增用户给用户一个address ，后续通过 address 发交易
   "request": "http://localhost:5002/privateKey",
   "response": {
     "address": "0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
@@ -9,7 +9,6 @@
     "userName": null,
     "type": 2
   }
-
 },
 
   {
@@ -20,6 +19,19 @@
     }
   },
 
+  {
+    // 发型资产  post    第一次用即可
+    "request": "http://localhost:5003/asset/issue?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
+    "body": {
+      "description" : "mi ya lian meng",
+      "shortName" : "MYLM",
+      "minUnit":5,
+      "totalAmount":1000000
+    },
+    "response": {
+      0x940246c91ce5769d010d829c92bf31f05d877e75
+    }
+  },
   {
     // 转账  post
     "request": "http://localhost:5002/asset/transfer?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",

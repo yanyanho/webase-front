@@ -1,6 +1,6 @@
 package com.webank.webase.front;
 
-import com.webank.webase.front.channel.test.BasicTest;
+import com.miya.token.channel.test.BasicTest;
 import org.fisco.bcos.channel.client.Service;
 import org.fisco.bcos.temp.BAC001;
 import org.fisco.bcos.web3j.crypto.Credentials;
