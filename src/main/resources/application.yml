@@ -30,8 +30,8 @@ spring:
         trace: true
 
 server:
-  port: 5002
-  context-path: /WeBASE-Front
+  port: 5003
+  context-path: /
 
 sdk:
   orgName: orgTest
@@ -40,15 +40,13 @@ sdk:
   queueCapacity: 100
   timeout: 10000
   keepAlive: 60
-  ip: 127.0.0.1
-  channelPort: 20800
+  ip: 119.23.46.126
+  channelPort: 20200
 
 logging:
   config: classpath:log4j2.xml
 
 constant:
-  keyServer: 127.0.0.1:5001
   transMaxWait: 30
-  monitorDisk: /
   aesKey: EfdsW23D23d3df43
-
+  contractAddress: 0x2426edaa1173f65cd7d62c93c935bfde329d247c

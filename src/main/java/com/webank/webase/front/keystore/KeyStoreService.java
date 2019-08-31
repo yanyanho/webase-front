@@ -189,59 +189,35 @@ public class KeyStoreService {
             //get privateKey by address
             return aesUtils.aesDecrypt(keyStoreInfoLocal.getPrivateKey());
         }
-
-        //get privateKey by userId
-        KeyStoreInfo keyStoreInfo = new KeyStoreInfo();
-        String[] ipPortArr = constants.getKeyServer().split(",");
-        for (String ipPort : ipPortArr) {
-            try {
-                String url = String.format(Constants.MGR_PRIVATE_KEY_URI, ipPort, user);
-                log.info("getPrivateKey url:{}", url);
-                BaseResponse response = restTemplate.getForObject(url, BaseResponse.class);
-                log.info("getPrivateKey response:{}", JSON.toJSONString(response));
-                if (response.getCode() == 0) {
-                    keyStoreInfo =
-                        CommonUtils.object2JavaBean(response.getData(), KeyStoreInfo.class);
-                    break;
-                }
-            } catch (Exception e) {
-                log.warn("user:{} getPrivateKey from ipPort:{} exception", user, ipPort, e);
-                continue;
-            }
-        }
-        if (useAes) {
-            return aesUtils.aesDecrypt(keyStoreInfo.getPrivateKey());
-        }
-
-        return keyStoreInfo.getPrivateKey();
-    }
-
-    /**
-     * getSignDate from sign service.
-     * 
-     * @param params params
-     * @return
-     */
-    public String getSignDate(EncodeInfo params) {
-        try {
-            SignInfo signInfo = new SignInfo();
-            String url = String.format(Constants.WEBASE_SIGN_URI, constants.getKeyServer());
-            log.info("getSignDate url:{}", url);
-            HttpHeaders headers = CommonUtils.buildHeaders();
-            HttpEntity<String> formEntity =
-                    new HttpEntity<String>(JSON.toJSONString(params), headers);
-            BaseResponse response =
-                    restTemplate.postForObject(url, formEntity, BaseResponse.class);
-            log.info("getSignDate response:{}", JSON.toJSONString(response));
-            if (response.getCode() == 0) {
-                signInfo = CommonUtils.object2JavaBean(response.getData(), SignInfo.class);
-            }
-            return signInfo.getSignDataStr();
-        } catch (Exception e) {
-            log.error("getSignDate exception", e);
-        }
         return null;
     }
+
+        //get privateKey by userId
+//        KeyStoreInfo keyStoreInfo = new KeyStoreInfo();
+//        String[] ipPortArr = constants.getKeyServer().split(",");
+//        for (String ipPort : ipPortArr) {
+//            try {
+//                String url = String.format(Constants.MGR_PRIVATE_KEY_URI, ipPort, user);
+//                log.info("getPrivateKey url:{}", url);
+//                BaseResponse response = restTemplate.getForObject(url, BaseResponse.class);
+//                log.info("getPrivateKey response:{}", JSON.toJSONString(response));
+//                if (response.getCode() == 0) {
+//                    keyStoreInfo =
+//                        CommonUtils.object2JavaBean(response.getData(), KeyStoreInfo.class);
+//                    break;
+//                }
+//            } catch (Exception e) {
+//                log.warn("user:{} getPrivateKey from ipPort:{} exception", user, ipPort, e);
+//                continue;
+//            }
+//        }
+//        if (useAes) {
+//            return aesUtils.aesDecrypt(keyStoreInfo.getPrivateKey());
+//        }
+
+//        return keyStoreInfo.getPrivateKey();
+
+
 
 }
 

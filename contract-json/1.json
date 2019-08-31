@@ -1,69 +1,53 @@
 [
   {
-  // 查询合约信息
-  "request": "http://localhost:5002/WeBASE-Front/trade/contract?contractId=0x878425b276e39d3026bcc99f8c1270b72fb73a0078d1f2fe958597d245b2bc7c&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db&userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6x",
+  // 获取私钥  get
+  "request": "http://localhost:5002/privateKey",
   "response": {
-    "timelock": 1576579259000,
-    "amount": 1000,
-    "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-    "sender": "0xa5edecd702b3ba2e60244095e8f2e96796a639c6",
-    "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
-    "assetContract": "0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
-    "withdrawn": false,
-    "hashlock": "e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490",
-    "refunded": false
+    "address": "0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
+    "publicKey": "0x1184470eea9c0df374f38b636cf2c129b4ec286246e0ecb8f1409bbd40c8b23fcb7453300f4dd1dfd8fe51bcbee3ab2cda5898167fdc0222d713971d2d8d5c7d",
+    "privateKey": "b2ba7fb897031a337a48369e62700cb11212ccb2c969deedc7a31a5bf0dd9d47",
+    "userName": null,
+    "type": 2
   }
+
 },
 
   {
-    // 存钱
-    "request": "http://localhost:5002/WeBASE-Front/trade/new-contract?userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-    "body":  {
-      "receiver":"0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-      "secerte":"hello",
-      "lockTime":1566480039000,
-      "assetContractAddress":"0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
-      "amount":1000
-       },
+    // 查余额 get
+    "request": "http://localhost:5002/asset/balance?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675&&contractAddress=0x2426edaa1173f65cd7d62c93c935bfde329d247c",
     "response": {
-      "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262"
+      998000
     }
   },
 
   {
-    // 取对方资金
-    "request": "http://localhost:5002/WeBASE-Front/trade/withdraw?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
+    // 转账  post
+    "request": "http://localhost:5002/asset/transfer?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
     "body":  {
-      "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262",
-      "secerte":"hello"
-       },
+      "from": "0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
+      "to": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
+      "value":"100",
+      "minUnit": "1",
+      "data": "diner money "
+    },
     "response": {
-      "timelock": 1576579259000,
-      "amount": 1000,
-      "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-      "sender": "0xa5edecd702b3ba2e60244095e8f2e96796a639c6",
-      "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
-      "assetContract": "0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
-      "withdrawn": false,
-      "hashlock": "e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490",
-      "refunded": false
+      true
     }
   },
 
   {
-  // 超时取回
-  "request": "http://localhost:5002/WeBASE-Front/trade/refund?userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-   "body":  { "contractId": "0xcf8428d6818c3e8ed0d94df889141412d2de8c4c7d6f5c2ee6f41b08f9375943"},
+  // 查询咨询详情   get
+  "request": "http://localhost:5002/asset/info?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
   "response": {
-    "timelock": 1576579259000,
-    "amount": 1000,
-    "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-    "sender": "0xa5edecd702b3ba2e60244095e8f2e96796a639c6",
-    "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
-    "assetContract": "0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
-    "withdrawn": false,
-    "hashlock": "e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490",
-    "refunded": false
+    "description": "GDX car asset",
+    "totalAmount": 10000000,
+    "minUnit": 1,
+    "shortName": "TTT",
+    "status": false,
+    "contractAddress": "0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
+    "contractName": "BAC001",
+    "groupId": 1
+
   }
 }
 ]

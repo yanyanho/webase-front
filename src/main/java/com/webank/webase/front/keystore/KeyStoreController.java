@@ -32,7 +32,7 @@ public class KeyStoreController extends BaseController {
         @ApiImplicitParam(name = "userName", value = "user name", dataType = "String")
     })
     @RequestMapping(method = RequestMethod.GET)
-    public KeyStoreInfo getKeyStore(@RequestParam(defaultValue = "false") boolean useAes,
+    public KeyStoreInfo createKeyStore(@RequestParam(defaultValue = "false") boolean useAes,
             @RequestParam(required = false, defaultValue = "2") int type,
             @RequestParam(required = false) String userName) {
         return keyStoreService.createKeyStore(useAes, type, userName);
@@ -44,11 +44,13 @@ public class KeyStoreController extends BaseController {
         @ApiImplicitParam(name = "userName", value = "user name", required = true, dataType = "String")
     })
     @RequestMapping(method = RequestMethod.GET, value = "/import")
-    public KeyStoreInfo importPrivateKey(@RequestParam(required = true) String privateKey,
-        @RequestParam(required = true) String userName) {
+    public KeyStoreInfo importPrivateKey(@RequestParam String privateKey,
+        @RequestParam String userName) {
         return keyStoreService.getKeyStoreFromPrivateKey(privateKey, false, KeyTypes.LOCALUSER.getValue(), userName);
     }
     
+
+
     @ApiOperation(value = "getKeyStores", notes = "get local KeyStore lists")
     @RequestMapping(method = RequestMethod.GET, value = "/localKeyStores")
     public List<KeyStoreInfo> getLocalKeyStores() {

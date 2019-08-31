@@ -1,6 +1,7 @@
 package com.webank.webase.front.trade.asset;
 
 import com.webank.webase.front.base.ConstantCode;
+import com.webank.webase.front.base.Constants;
 import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.keystore.KeyStoreService;
 import com.webank.webase.front.trade.request.SendReq;
@@ -17,7 +18,6 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import static com.webank.webase.front.base.Constants.contractGasProvider;
-import static com.webank.webase.front.trade.trade.TradeService.dealWithReceipt;
 
 @Slf4j
 @Service
@@ -28,8 +28,16 @@ public class AssetService {
     @Autowired
     KeyStoreService keyStoreService;
 
+    @Autowired
+    Constants constants;
+
+
     public BigInteger assetBalance(String contractName, String contractAddress, String userAddress, int groupId) throws FrontException {
         BigInteger balance = new BigInteger("0");
+        if(contractAddress== null) {
+            contractAddress = constants.contractAddress;
+            log.info("*****" + contractAddress);
+        }
         if (!userAddress.equals("0x0000000000000000000000000000000000000000")) {
             try {
                 if ("BAC001".equals(contractName)) {
@@ -95,7 +103,10 @@ public class AssetService {
 
 
     public BACInfo assetInfo(String contractName, String contractAddress, int groupId) throws Exception {
-       if("BAC001".equals(contractName)) {
+        if(contractAddress== null) {
+            contractAddress = constants.contractAddress;
+        }
+        if("BAC001".equals(contractName)) {
            BAC001 bac001 = getBAC001OnlyQueryChain(groupId,  contractAddress);
            String description = bac001.description().send();
            BigInteger totalAmount = bac001.totalAmount().send();
@@ -115,6 +126,11 @@ public class AssetService {
     }
 
     public Boolean sendFund(SendReq sendReq, String contractName, String contractAddress, int groupId) throws Exception {
+
+        if(contractAddress== null) {
+            contractAddress = constants.contractAddress;
+        }
+
         if("BAC001".equals(contractName)) {
             BAC001 bac001 = getBAC001(groupId, sendReq.getFrom(), contractAddress);
              String to = sendReq.getTo();
@@ -135,5 +151,16 @@ public class AssetService {
             dealWithReceipt(transactionReceipt);
         }
             return true;
+    }
+
+
+    public static void dealWithReceipt(TransactionReceipt transactionReceipt) {
+        log.info("*********"+ transactionReceipt.getOutput());
+        if ("0x16".equals(transactionReceipt.getStatus()) && transactionReceipt.getOutput().startsWith("0x08c379a0")) {
+            throw new FrontException(DecodeOutputUtils.decodeOutputReturnString0x16(transactionReceipt.getOutput()));
+        }
+        if (!"0x0".equals(transactionReceipt.getStatus())) {
+            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus());
+        }
     }
 }

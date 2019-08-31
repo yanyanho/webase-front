@@ -170,24 +170,24 @@ public class Web3Config {
         return cnsServiceMap;
     }
 
-    @Bean
-    public HashMap<Integer, String> getHTLCContractAddress(HashMap<Integer,Web3j> web3jMap) throws Exception {
-        Credentials credentials = Credentials.create("3bed914595c159cbce70ec5fb6aff3d6797e0c5ee5a7a9224a21cae8932d84a4");
-        HashMap htlcMap = new HashMap<Integer, String>();
-        Iterator entries = web3jMap.entrySet().iterator();
-
-        while (entries.hasNext()) {
-            Map.Entry entry = (Map.Entry) entries.next();
-            Integer key =  (Integer)entry.getKey();
-            Web3j value = (Web3j) entry.getValue();
-            String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
-
-            htlcMap.put(key, contractAddress );
-            log.info("htlc:{} addresee {}", key, contractAddress);
-
-        }
-        return htlcMap;
-    }
+//    @Bean
+//    public HashMap<Integer, String> getHTLCContractAddress(HashMap<Integer,Web3j> web3jMap) throws Exception {
+//        Credentials credentials = Credentials.create("3bed914595c159cbce70ec5fb6aff3d6797e0c5ee5a7a9224a21cae8932d84a4");
+//        HashMap htlcMap = new HashMap<Integer, String>();
+//        Iterator entries = web3jMap.entrySet().iterator();
+//
+//        while (entries.hasNext()) {
+//            Map.Entry entry = (Map.Entry) entries.next();
+//            Integer key =  (Integer)entry.getKey();
+//            Web3j value = (Web3j) entry.getValue();
+//            String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
+//
+//            htlcMap.put(key, contractAddress );
+//            log.info("htlc:{} addresee {}", key, contractAddress);
+//
+//        }
+//        return htlcMap;
+//    }
 
 
     @Bean

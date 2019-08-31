@@ -23,7 +23,7 @@ public class AssetController {
     @ApiOperation(value = "assetBalance", notes = "Get asset's accounts")
     @GetMapping("/balance")
     public BigInteger assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
-                                   @RequestParam String contractAddress,
+                                   @RequestParam(required = false) String contractAddress,
                                    @RequestParam String userAddress,
                                    @RequestParam(defaultValue = "1") int groupId)  {
             return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
@@ -32,16 +32,16 @@ public class AssetController {
     @ApiOperation(value = "assetInfo", notes = "Get asset's info")
     @GetMapping("/info")
     public BACInfo assetInfo(@RequestParam(defaultValue = "BAC001") String contractName,
-                             @RequestParam String contractAddress,
+                             @RequestParam(required = false) String contractAddress,
                              @RequestParam(defaultValue = "1") int groupId) throws Exception {
             return assetService.assetInfo(contractName,contractAddress,groupId);
     }
 
     @PostMapping("/transfer")
     public Boolean assetTransfer( @RequestBody SendReq sendReq,
-                                @RequestParam(defaultValue = "BAC001") String contractName,
-                                @RequestParam String contractAddress,
-                                @RequestParam(defaultValue = "1") int groupId) throws Exception {
+                                  @RequestParam(defaultValue = "BAC001") String contractName,
+                                  @RequestParam(required = false) String contractAddress,
+                                  @RequestParam(defaultValue = "1") int groupId) throws Exception {
           return   assetService.sendFund(sendReq,contractName,contractAddress,groupId);
     }
 }
