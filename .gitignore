@@ -35,4 +35,5 @@ gradle.properties
 /log
 /dist
 src/main/resources/application.yml
+src/test/resources/applicationContext.xml
 
