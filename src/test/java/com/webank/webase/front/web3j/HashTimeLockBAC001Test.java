@@ -46,8 +46,9 @@ public class HashTimeLockBAC001Test {
       Web3j web3j = Web3j.build(channelEthereumService, service.getGroupId());
 
       //发行bac001
-      BAC001 bac001 = BAC001.deploy(web3j, credentials, contractGasProvider, "GDX car asset", "TTT",BigInteger.valueOf(1), BigInteger.valueOf(1000000)).send();
+      BAC001 bac001 = BAC001.deploy(web3j, credentialsBob, contractGasProvider, "GDX car asset", "TTT",BigInteger.valueOf(1), BigInteger.valueOf(1000000)).send();
       String contractAddress = bac001.getContractAddress();
+        System.out.println("contract address : " +  contractAddress);
 
       HashedTimelockBAC001 hashTimeLockBAC001 =  HashedTimelockBAC001.deploy(web3j, credentials, contractGasProvider).send();
       String hashtimeLockAddress = hashTimeLockBAC001.getContractAddress();

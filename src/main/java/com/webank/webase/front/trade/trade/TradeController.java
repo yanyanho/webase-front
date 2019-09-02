@@ -5,7 +5,6 @@ import com.webank.webase.front.trade.request.RefundReq;
 import com.webank.webase.front.trade.request.WithDrawReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.fisco.bcos.web3j.tuples.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,7 @@ public class TradeController {
                                           @RequestParam String userAddress,
                                           @RequestParam String htlcContractAddress) throws Exception {
 
-        return tradeService.newContract(contractReq,groupId,userAddress,htlcContractAddress);
+        return tradeService.newContractForInitiator(contractReq,groupId,userAddress,htlcContractAddress);
     }
 
     @RequestMapping("/new-contract-receiver")
