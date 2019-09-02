@@ -42,16 +42,16 @@ public class TradeService {
     @Autowired
     private  Map<Integer, String> htlcMap;
 
-    public String newContract(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
+    public String newContractForInitiator(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
 
         BAC001 bac001 =  getBAC001(groupId,userAddress, contractReq.getAssetContractAddress());
-        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,new BigInteger("100000")).send();
-
+        BigInteger minUnit = bac001.minUnit().send();
+        BigInteger value =   BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount());
+        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,value).send();
         dealWithReceipt(transactionReceipt001);
-
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
         byte[] hash ;
-             hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+         hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
 
         TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), contractReq.getAmount()).send();
 
@@ -71,7 +71,7 @@ public class TradeService {
 
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
         byte[] hash ;
-        hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+        hash = Util.hexStringToBytes(contractReq.getSecerte());
 
         TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), contractReq.getAmount()).send();
 
@@ -101,7 +101,8 @@ public class TradeService {
         byte[] contractIdBytes = Util.hexStringToBytes(contractId.substring(2));
         Tuple9<String, String, String, BigInteger, byte[], BigInteger, Boolean, Boolean, byte[]> output = hashedTimelockBAC001.getContract(contractIdBytes).send();
         BigInteger amount   = output.getValue4();
-        if(value != amount) {
+
+        if(value .intValue() != amount.intValue()) {
             throw new FrontException("the counterpart's value not match");
         }
 
@@ -119,12 +120,12 @@ public class TradeService {
     }
 
     public static void dealWithReceipt(TransactionReceipt transactionReceipt) {
-        log.info("*********"+ transactionReceipt.getOutput());
+       // log.info("*********"+ transactionReceipt.getOutput());
         if ("0x16".equals(transactionReceipt.getStatus()) && transactionReceipt.getOutput().startsWith("0x08c379a0")) {
             throw new FrontException(DecodeOutputUtils.decodeOutputReturnString0x16(transactionReceipt.getOutput()));
         }
         if (!"0x0".equals(transactionReceipt.getStatus())) {
-            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus());
+            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus() + "交易返回 " + transactionReceipt.getOutput());
         }
     }
 

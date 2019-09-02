@@ -65,9 +65,9 @@ public class AssetService {
             Web3j web3j = web3jMap.get(groupId);
             Credentials credentials = Credentials.create("2");
              BAC001 bac001 = BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
-            if(!bac001.isValid()) {
-                throw new FrontException("contract load failed , please checkout contract address!");
-            }
+//            if(!bac001.isValid()) {
+//                throw new FrontException("contract load failed , please checkout contract address!");
+//            }
             return bac001;
         }
 

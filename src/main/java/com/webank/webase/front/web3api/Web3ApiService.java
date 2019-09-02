@@ -454,6 +454,7 @@ public class Web3ApiService {
     public List<String> getGroupList() {
         try {
             Set<Integer> iset = web3jMap.keySet();
+            log.info("&&&& "  + iset.toArray()[0]);
             return web3jMap.get(iset.toArray()[0]).getGroupList().send().getGroupList();
         } catch (IOException e) {
             throw new FrontException(e.getMessage());
