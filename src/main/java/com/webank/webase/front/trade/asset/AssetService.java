@@ -115,6 +115,7 @@ public class AssetService {
     }
 
     public Boolean sendFund(SendReq sendReq, String contractName, String contractAddress, int groupId) throws Exception {
+
         if("BAC001".equals(contractName)) {
             BAC001 bac001 = getBAC001(groupId, sendReq.getFrom(), contractAddress);
              String to = sendReq.getTo();
@@ -123,8 +124,7 @@ public class AssetService {
              if(sendReq.getMinUnit()== null) {
                   minUnit = bac001.minUnit().send();
              }
-             BigInteger value  = sendReq.getValue().multiply(minUnit);
-            BigInteger realAmount = BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply(value);
+            BigInteger realAmount = BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply( sendReq.getValue());
           TransactionReceipt transactionReceipt =  bac001.send(to,realAmount,data).send();
             dealWithReceipt(transactionReceipt);
             return true;

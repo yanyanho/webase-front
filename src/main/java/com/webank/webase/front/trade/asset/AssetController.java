@@ -32,16 +32,16 @@ public class AssetController {
     @ApiOperation(value = "assetInfo", notes = "Get asset's info")
     @GetMapping("/info")
     public BACInfo assetInfo(@RequestParam(defaultValue = "BAC001") String contractName,
-                             @RequestParam String contractAddress,
-                             @RequestParam(defaultValue = "1") int groupId) throws Exception {
+                              @RequestParam String contractAddress,
+                              @RequestParam(defaultValue = "1") int groupId) throws Exception {
             return assetService.assetInfo(contractName,contractAddress,groupId);
     }
 
     @PostMapping("/transfer")
     public Boolean assetTransfer( @RequestBody SendReq sendReq,
-                                @RequestParam(defaultValue = "BAC001") String contractName,
-                                @RequestParam String contractAddress,
-                                @RequestParam(defaultValue = "1") int groupId) throws Exception {
+                                   @RequestParam(defaultValue = "BAC001") String contractName,
+                                   @RequestParam String contractAddress,
+                                   @RequestParam(defaultValue = "1") int groupId) throws Exception {
           return   assetService.sendFund(sendReq,contractName,contractAddress,groupId);
     }
 }

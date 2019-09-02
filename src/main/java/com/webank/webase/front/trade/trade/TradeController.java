@@ -43,9 +43,9 @@ public class TradeController {
     @RequestMapping("/withdraw")
     @ApiOperation(value = "withdraw", httpMethod = "POST")
     public String withdrawFund (@RequestBody WithDrawReq withDrawReq,
-                                @RequestParam(defaultValue = "1") int groupId,
-                                @RequestParam String userAddress,
-                                @RequestParam String htlcContractAddress) throws Exception {
+                                 @RequestParam(defaultValue = "1") int groupId,
+                                 @RequestParam String userAddress,
+                                 @RequestParam String htlcContractAddress) throws Exception {
 
         return tradeService.withdraw(withDrawReq,groupId,userAddress,htlcContractAddress);
     }
