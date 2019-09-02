@@ -55,9 +55,9 @@ public class AssetService {
             Web3j web3j = web3jMap.get(groupId);
             Credentials credentials = keyStoreService.getCredentials(userAddress,false );
             BAC001 bac001 =  BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
-            if(!bac001.isValid()) {
-                throw new FrontException("contract load failed , please checkout contract address!");
-            }
+//            if(!bac001.isValid()) {
+//                throw new FrontException("contract load failed , please checkout contract address!");
+//            }
             return bac001;
         }
 
@@ -76,9 +76,9 @@ public class AssetService {
             Web3j web3j = web3jMap.get(groupId);
             Credentials credentials = keyStoreService.getCredentials(userAddress,false );
             BAC002 bac002 = BAC002.load(assetAddress, web3j, credentials, contractGasProvider);
-            if(!bac002.isValid()) {
-                throw new FrontException("contract load failed , please checkout contract address!");
-            }
+//            if(!bac002.isValid()) {
+//                throw new FrontException("contract load failed , please checkout contract address!");
+//            }
             return bac002;
         }
 
@@ -86,10 +86,10 @@ public class AssetService {
             Web3j web3j = web3jMap.get(groupId);
             Credentials credentials = Credentials.create("2");
             BAC002 bac002 =  BAC002.load(assetAddress, web3j, credentials, contractGasProvider);
-            if(!bac002.isValid()) {
-                throw new FrontException("contract load failed , please checkout contract address!");
-
-            }
+//            if(!bac002.isValid()) {
+//                throw new FrontException("contract load failed , please checkout contract address!");
+//
+//            }
             return bac002;
     }
 
