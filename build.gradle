@@ -106,17 +106,13 @@ jar {
     doLast {
         copy {
             from file('src/main/resources/')
-            into 'dist/conf_template'
+            into 'dist/conf'
 			exclude '**/static'
         }
 		copy {
 			from file('src/main/resources/static')
 			into 'dist/static'
 		}
-        copy {
-            from file('report/')
-            into 'dist/report'
-        }
 		copy {
 			from configurations.runtime
 			into 'dist/lib'
