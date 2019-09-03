@@ -76,6 +76,19 @@
   "response": {
     0x0000000000000000000000000000000000000000000000000000000000000001
   }
-}
+},
+  {
+    // 发型资产  post    第一次用即可
+    "request": "http://localhost:5003/asset/issue?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
+    "body": {
+      "description" : "mi ya lian meng",
+      "shortName" : "MYLM",
+      "minUnit":5,
+      "totalAmount":1000000
+    },
+    "response": {
+      0x940246c91ce5769d010d829c92bf31f05d877e75
+    }
+  }
 ]
 
