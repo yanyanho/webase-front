@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * ExceptionsHandler.
  */
-@ControllerAdvice
+//@ControllerAdvice
 @Slf4j
 public class ExceptionsHandler {
 

@@ -43,7 +43,7 @@ public class AssetService {
                 }
             } catch (Exception e) {
                 log.error("assetBalance assetId:{} Exception", contractName, e);
-                throw new FrontException(ConstantCode.SYSTEM_ERROR);
+                throw new FrontException(e.getMessage());
             }
         }
             return  balance;
