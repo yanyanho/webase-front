@@ -1,5 +1,6 @@
 package com.webank.webase.front.trade.asset;
 
+import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.request.SendReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,5 +44,13 @@ public class AssetController {
                                    @RequestParam String contractAddress,
                                    @RequestParam(defaultValue = "1") int groupId) throws Exception {
           return   assetService.sendFund(sendReq,contractName,contractAddress,groupId);
+    }
+
+    @PostMapping("/issue")
+    public String assetIssue ( @RequestBody IssueReq issueReq,
+                               @RequestParam(defaultValue = "BAC001") String contractName,
+                               @RequestParam String userAddress,
+                               @RequestParam(defaultValue = "1") int groupId) throws Exception {
+        return   assetService.issueAsset(issueReq,contractName,userAddress,groupId);
     }
 }

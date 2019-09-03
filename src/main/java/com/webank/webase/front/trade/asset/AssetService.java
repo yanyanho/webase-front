@@ -1,8 +1,10 @@
 package com.webank.webase.front.trade.asset;
 
 import com.webank.webase.front.base.ConstantCode;
+import com.webank.webase.front.base.Constants;
 import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.keystore.KeyStoreService;
+import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.request.SendReq;
 import com.webank.webase.front.util.DecodeOutputUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -136,4 +138,17 @@ public class AssetService {
         }
             return true;
     }
+
+    public String issueAsset(IssueReq issueReq, String contractName, String userAddress, int groupId) throws Exception {
+
+        Web3j web3j = web3jMap.get(groupId);
+        Credentials credentials = keyStoreService.getCredentials(userAddress,false );
+
+        if("BAC001".equals(contractName)) {
+            BAC001 bac001 = BAC001.deploy(web3j, credentials, Constants.contractGasProvider, issueReq.getDescription(), issueReq.getShortName(), issueReq.getMinUnit(), issueReq.getTotalAmount()).send();
+            return bac001.getContractAddress();
+        }
+        return null;
+    }
+
 }
