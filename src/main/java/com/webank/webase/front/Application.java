@@ -38,7 +38,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Slf4j
 @EnableSwagger2
-@EnableScheduling
 @SpringBootApplication
 public class Application {
 
