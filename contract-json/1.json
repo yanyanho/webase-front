@@ -1,7 +1,7 @@
 [
   {
   // 获取私钥  get  给每个用户产生一个公私钥对， 新增用户给用户一个address ，后续通过 address 发交易
-  "request": "http://localhost:5002/privateKey",
+  "request": "http://localhost:5003/privateKey",
   "response": {
     "address": "0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
     "publicKey": "0x1184470eea9c0df374f38b636cf2c129b4ec286246e0ecb8f1409bbd40c8b23fcb7453300f4dd1dfd8fe51bcbee3ab2cda5898167fdc0222d713971d2d8d5c7d",
@@ -13,7 +13,7 @@
 
   {
     // 查余额 get
-    "request": "http://localhost:5002/asset/balance?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675&&contractAddress=0x2426edaa1173f65cd7d62c93c935bfde329d247c",
+    "request": "http://localhost:5003/asset/balance?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675&&contractAddress=0x2426edaa1173f65cd7d62c93c935bfde329d247c",
     "response": {
       998000
     }
@@ -34,7 +34,7 @@
   },
   {
     // 转账  post
-    "request": "http://localhost:5002/asset/transfer?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
+    "request": "http://localhost:5003/asset/transfer?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
     "body":  {
       "from": "0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
       "to": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
@@ -49,7 +49,7 @@
 
   {
   // 查询咨询详情   get
-  "request": "http://localhost:5002/asset/info?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
+  "request": "http://localhost:5003/asset/info?contractAddress=0xcdb9ba475af46fc72ad00ef412da37ef796895b1",
   "response": {
     "description": "GDX car asset",
     "totalAmount": 10000000,
