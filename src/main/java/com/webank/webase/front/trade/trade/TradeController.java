@@ -74,7 +74,7 @@ public class TradeController {
 
     @RequestMapping("/htlc")
     @ApiOperation(value = "htlc", httpMethod = "GET")
-    public Map getHTLCAddress() throws Exception {
+    public Map getHTLCAddress()   {
 
         return tradeService.getHTLCAddress();
     }

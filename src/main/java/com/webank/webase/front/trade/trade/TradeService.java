@@ -9,6 +9,8 @@ import com.webank.webase.front.trade.request.RefundReq;
 import com.webank.webase.front.trade.request.WithDrawReq;
 import com.webank.webase.front.trade.asset.BAC001;
 import com.webank.webase.front.trade.asset.HashedTimelockBAC001;
+import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
+import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import com.webank.webase.front.util.DecodeOutputUtils;
 import com.webank.webase.front.util.Tools;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +19,13 @@ import org.fisco.bcos.web3j.crypto.Hash;
 import org.fisco.bcos.web3j.crypto.gm.sm3.Util;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.fisco.bcos.web3j.tuples.Tuple;
 import org.fisco.bcos.web3j.tuples.generated.Tuple9;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.fisco.bcos.web3j.crypto.gm.sm3.Util.encodeHexString;
@@ -40,7 +42,10 @@ public class TradeService {
     KeyStoreService keyStoreService;
 
     @Autowired
-    private  Map<Integer, String> htlcMap;
+    HTLCInfoService htlcInfoService;
+
+    public static Map<Integer, String> imap;
+
 
     public String newContractForInitiator(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
 
@@ -163,8 +168,14 @@ public class TradeService {
     }
 
     public Map getHTLCAddress() {
-        return htlcMap;
-    }
 
+        List<HTLCInfo> htlcInfos = htlcInfoService.findAll();
+
+        for (int i = 0; i < htlcInfos.size(); i++) {
+            HTLCInfo htlcInfo = htlcInfos.get(i);
+            imap.put(htlcInfo.getGroupId(),htlcInfo.getContractAddress());
+        }
+        return imap;
+    }
 
 }
