@@ -142,13 +142,21 @@ public class AssetService {
     public String issueAsset(IssueReq issueReq, String contractName, String userAddress, int groupId) throws Exception {
 
         Web3j web3j = web3jMap.get(groupId);
-        Credentials credentials = keyStoreService.getCredentials(userAddress,false );
-
-        if("BAC001".equals(contractName)) {
-            BAC001 bac001 = BAC001.deploy(web3j, credentials, Constants.contractGasProvider, issueReq.getDescription(), issueReq.getShortName(), issueReq.getMinUnit(), issueReq.getTotalAmount()).send();
-            return bac001.getContractAddress();
+        Credentials credentials = keyStoreService.getCredentials(userAddress, false);
+        try {
+            if ("BAC001".equals(contractName)) {
+                BAC001 bac001 = BAC001.deploy(web3j, credentials, Constants.contractGasProvider, issueReq.getDescription(), issueReq.getShortName(), issueReq.getMinUnit(), issueReq.getTotalAmount()).send();
+                return bac001.getContractAddress();
+            }
+            if ("BAC002".equals(contractName)) {
+                BAC002 bac002 = BAC002.deploy(web3j, credentials, Constants.contractGasProvider, issueReq.getDescription(), issueReq.getShortName()).send();
+                return bac002.getContractAddress();
+            }
+        } catch (Exception e) {
+            throw new FrontException(e.getMessage());
         }
         return null;
     }
+
 
 }
