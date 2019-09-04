@@ -24,9 +24,9 @@ public class AssetController {
     @ApiOperation(value = "assetBalance", notes = "Get asset's accounts")
     @GetMapping("/balance")
     public BigInteger assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
-                                   @RequestParam String contractAddress,
-                                   @RequestParam String userAddress,
-                                   @RequestParam(defaultValue = "1") int groupId)  {
+                                    @RequestParam String contractAddress,
+                                    @RequestParam String userAddress,
+                                    @RequestParam(defaultValue = "1") int groupId)  {
             return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
     }
 
