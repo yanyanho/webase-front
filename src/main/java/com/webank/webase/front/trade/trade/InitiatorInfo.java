@@ -11,4 +11,5 @@ public class InitiatorInfo {
     private String initiatorAssetContractAddress;
     private String initiatorHtlcContractAddress;
     private BigInteger initiatorValue;
+    private BigInteger initiatorAssetMinunit;
 }
