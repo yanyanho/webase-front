@@ -1,31 +1,29 @@
 [
   {
-  // 查询合约信息
-  "request": "http://localhost:5002/WeBASE-Front/trade/contract?contractId=0x878425b276e39d3026bcc99f8c1270b72fb73a0078d1f2fe958597d245b2bc7c&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db&userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6x",
-  "response": {
-    "timelock": 1576579259000,
-    "amount": 1000,
-    "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-    "sender": "0xa5edecd702b3ba2e60244095e8f2e96796a639c6",
-    "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
-    "assetContract": "0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
-    "withdrawn": false,
-    "hashlock": "e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490",
-    "refunded": false
-  }
-},
-
+    // 查询合约信息
+    "request": "http://localhost:5002/WeBASE-Front/trade/contract?contractId=0x878425b276e39d3026bcc99f8c1270b72fb73a0078d1f2fe958597d245b2bc7c&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db&userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6x",
+    "response": {
+      "timelock": 1576579259000,
+      "amount": 1000,
+      "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+      "sender": "0xa5edecd702b3ba2e60244095e8f2e96796a639c6",
+      "preimage": "0000000000000000000000000000000000000000000000000000000000000000",
+      "assetContract": "0x937dec70269c7bb099e0cf1595414c4e7c3bb22c",
+      "withdrawn": false,
+      "hashlock": "e2fc2924d46d00f40b5a9a2788cffe77b48d7ef03ab809966e6ccbd4f3d29490",
+      "refunded": false
+    }
+  },
   {
     // 发起者存钱
     "request": "http://localhost:5002/WeBASE-Front/trade/new-contract-initiator?userAddress=0x79e0de225b262fed0f3b13829d5dc31715949a33&htlcContractAddress=0x6c972842843ea8f97ac7fe4312e846c7882546fc&groupId=1",
-    "body":  {
-    "receiver":"0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
-    "secerte":"hello",
-    "lockTime":1567419360000,
-    "assetContractAddress":"0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
-    "amount":100
-
-       },
+    "body": {
+      "receiver": "0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+      "secerte": "hello",
+      "lockTime": 1567419360000,
+      "assetContractAddress": "0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
+      "amount": 100
+    },
     "response": {
       "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262"
     }
@@ -33,62 +31,78 @@
   {
     // 接受方存钱
     "request": "http://localhost:5002/WeBASE-Front/trade/new-contract-receiver?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&htlcContractAddress=0x5fc64cbce223ccbb7e94ab88d32efdb8008580d4&groupId=2",
-    "body":
-  {
-    "receiver":"0x79e0de225b262fed0f3b13829d5dc31715949a33",
-    "secerte":"0ee8c396eb4005554d2ee590de052203711496512b848db0dd8a380df0fcde20",
-    "lockTime":1567419360000,
-    "assetContractAddress":"0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-    "amount":200,
-
-    "initiatorInfo": {
-      "initiatorContractId":"0x9c48a5a92c7bc14a56138fc8c35c35a8584bf3c16930e83b83ad4cd26708f574",
-      "initiatorGroupId":"1",
-      "initiatorAssetContractAddress": "0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
-      "initiatorHtlcContractAddress": "0x6c972842843ea8f97ac7fe4312e846c7882546fc",
-      "initiatorValue": "100"
-    }
-
-
-       },
+    "body": {
+      "receiver": "0x79e0de225b262fed0f3b13829d5dc31715949a33",
+      "secerte": "0ee8c396eb4005554d2ee590de052203711496512b848db0dd8a380df0fcde20",
+      "lockTime": 1567419360000,
+      "assetContractAddress": "0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
+      "amount": 200,
+      "initiatorInfo": {
+        "initiatorContractId": "0x9c48a5a92c7bc14a56138fc8c35c35a8584bf3c16930e83b83ad4cd26708f574",
+        "initiatorGroupId": "1",
+        "initiatorAssetContractAddress": "0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
+        "initiatorHtlcContractAddress": "0x6c972842843ea8f97ac7fe4312e846c7882546fc",
+        "initiatorValue": "100"
+      }
+    },
     "response": {
       "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262"
     }
   },
-
   {
     // 取对方资金
     "request": "http://localhost:5002/WeBASE-Front/trade/withdraw?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-    "body":  {
+    "body": {
       "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262",
-      "secerte":"hello",
-      "value":200
-       },
+      "secerte": "hello",
+      "value": 200
+    },
     "response": {
       0x0000000000000000000000000000000000000000000000000000000000000001
     }
   },
-
   {
-  // 超时取回
-  "request": "http://localhost:5002/WeBASE-Front/trade/refund?userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-   "body":  { "contractId": "0xcf8428d6818c3e8ed0d94df889141412d2de8c4c7d6f5c2ee6f41b08f9375943"},
-  "response": {
-    0x0000000000000000000000000000000000000000000000000000000000000001
-  }
-},
+    // 超时取回
+    "request": "http://localhost:5002/WeBASE-Front/trade/refund?userAddress=0xa5edecd702b3ba2e60244095e8f2e96796a639c6&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
+    "body": {
+      "contractId": "0xcf8428d6818c3e8ed0d94df889141412d2de8c4c7d6f5c2ee6f41b08f9375943"
+    },
+    "response": {
+      0x0000000000000000000000000000000000000000000000000000000000000001
+    }
+  },
   {
     // 发型资产  post    第一次用即可
     "request": "http://localhost:5003/asset/issue?userAddress=0x158fd59e695e3656b706558e6e9e85b5d5cf4675",
     "body": {
-      "description" : "mi ya lian meng",
-      "shortName" : "MYLM",
-      "minUnit":5,
-      "totalAmount":1000000
+      "description": "mi ya lian meng",
+      "shortName": "MYLM",
+      "minUnit": 5,
+      "totalAmount": 1000000
     },
     "response": {
       0x940246c91ce5769d010d829c92bf31f05d877e75
     }
-  }
+  },
+  {
+    // 查询htlc详情
+    "request": "http://localhost:5002/htlc",
+    "response":
+  [
+    {
+      "id": 1,
+      "groupId": 1,
+      "contractAddress": "0x62813796958620534e781bcd00f5fb761c4f4a45",
+      "createTime": "2019-09-04 11:11:24"
+    },
+    {
+      "id": 2,
+      "groupId": 2,
+      "contractAddress": "0x62813796958620534e781bcd00f5fb761c4f4a45",
+      "createTime": "2019-09-04 11:11:26"
+    }
+  ]
+
+}
 ]
 
