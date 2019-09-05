@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 
 @Api(value = "/asset", tags = "asset interface")
@@ -23,10 +23,10 @@ public class AssetController {
 
     @ApiOperation(value = "assetBalance", notes = "Get asset's accounts")
     @GetMapping("/balance")
-    public BigInteger assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
-                                    @RequestParam String contractAddress,
-                                    @RequestParam String userAddress,
-                                    @RequestParam(defaultValue = "1") int groupId)  {
+    public BigDecimal assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
+                                   @RequestParam String contractAddress,
+                                   @RequestParam String userAddress,
+                                   @RequestParam(defaultValue = "1") int groupId)  {
             return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
     }
 
