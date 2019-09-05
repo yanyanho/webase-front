@@ -23,6 +23,7 @@ import org.fisco.bcos.web3j.tuples.generated.Tuple9;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,7 @@ public class TradeService {
 
         BAC001 bac001 =  getBAC001(groupId,userAddress, contractReq.getAssetContractAddress());
         BigInteger minUnit = bac001.minUnit().send();
-        BigInteger value =   BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount());
+        BigInteger value =   contractReq.getAmount().multiply(BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue()))).toBigInteger();
 
         TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,value).send();
         dealWithReceipt(transactionReceipt001);
@@ -70,7 +71,7 @@ public class TradeService {
 
         BAC001 bac001 =  getBAC001(groupId, userAddress, contractReq.getAssetContractAddress());
         BigInteger minUnit = bac001.minUnit().send();
-        BigInteger value =   BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount());
+        BigInteger value =   BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount()).toBigInteger();
 
         int initiatorGroupId  =  contractReq.getInitiatorInfo().getInitiatorGroupId();
         BigInteger initiatorValue = contractReq.getInitiatorInfo().getInitiatorValue();
@@ -110,7 +111,7 @@ public class TradeService {
           BAC001 bac001 = getBAC001(groupId, userAddress, withDrawReq.getPartnerAssetAddress());
           minUint = bac001.minUnit().send();
        }
-        BigInteger realValue  =  BigInteger.valueOf((long) Math.pow(10, minUint.doubleValue())).multiply(withDrawReq.getValue());
+        BigInteger realValue  =  BigDecimal.valueOf( Math.pow(10, minUint.doubleValue())).multiply(withDrawReq.getValue()).toBigInteger();
         chekoutCounterpartyDeposit(realValue ,withDrawReq.getContractId(), groupId,userAddress, htlcContractAddress);
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
 

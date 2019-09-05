@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-@ServerEndpoint("/websocket/{userId}")
+@ServerEndpoint("/websocket/{userAddress}")
 @Component
 @Slf4j
 public class WebSocket {
@@ -20,29 +20,29 @@ public class WebSocket {
 
     /**
      * onOpen是当用户发起连接时，会生成一个用户的Session 注意此Session是 javax.websocket.Session;
-     * 然后我们用userId作为Key Session作为Vaule存入Map中暂存起来
+     * 然后我们用userAddress作为Key Session作为Vaule存入Map中暂存起来
      *
-     * @param userId
+     * @param userAddress
      * @param session
      */
     @OnOpen
-    public void onOpen(@PathParam("userId") String userId, Session session) {
-        log.info("====>WebSocketService onOpen: " + userId);
+    public void onOpen(@PathParam("userAddress") String userAddress, Session session) {
+        log.info("====>WebSocketService onOpen: " + userAddress);
         if (sessionMap == null) {
             sessionMap = new ConcurrentHashMap<String, Session>();
         }
-        sessionMap.put(userId, session);
+        sessionMap.put(userAddress, session);
     }
 
     /**
      * onClose 是用户关闭聊天窗时，将用户session移除
      *
-     * @param userId
+     * @param userAddress
      */
     @OnClose
-    public void onClose(@PathParam("userId") String userId) {
-        log.info("====>WebSocketService OnClose: " + userId);
-        sessionMap.remove(userId);
+    public void onClose(@PathParam("userAddress") String userAddress) {
+        log.info("====>WebSocketService OnClose: " + userAddress);
+        sessionMap.remove(userAddress);
     }
 
     /**

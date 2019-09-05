@@ -23,7 +23,7 @@ public class TradeController {
     @RequestMapping("/new-contract-initiator")
     @ApiOperation(value = "new contract", httpMethod = "POST")
     public String createNewCrossContract(@RequestBody ContractReq contractReq,
-                                         @RequestParam(defaultValue = "1") int groupId,
+                                          @RequestParam(defaultValue = "1") int groupId,
                                           @RequestParam String userAddress,
                                           @RequestParam String htlcContractAddress) throws Exception {
 
@@ -33,7 +33,7 @@ public class TradeController {
     @RequestMapping("/new-contract-receiver")
     @ApiOperation(value = "new contract", httpMethod = "POST")
     public String createNewCrossContractForReceive(@RequestBody ContractReq contractReq,
-                                         @RequestParam(defaultValue = "1") int groupId,
+                                          @RequestParam(defaultValue = "1") int groupId,
                                           @RequestParam String userAddress,
                                           @RequestParam String htlcContractAddress) throws Exception {
 

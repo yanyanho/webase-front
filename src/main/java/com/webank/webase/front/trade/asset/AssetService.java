@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -126,7 +127,7 @@ public class AssetService {
              if(sendReq.getMinUnit()== null) {
                   minUnit = bac001.minUnit().send();
              }
-            BigInteger realAmount = BigInteger.valueOf((long) Math.pow(10,minUnit.doubleValue())).multiply( sendReq.getValue());
+            BigInteger realAmount = BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue())).multiply( sendReq.getValue()).toBigInteger();
           TransactionReceipt transactionReceipt =  bac001.send(to,realAmount,data).send();
             dealWithReceipt(transactionReceipt);
             return true;
