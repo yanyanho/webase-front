@@ -12,6 +12,5 @@ public class WithDrawReq {
     private BigInteger value;
     private String  partnerAssetAddress;
     private BigInteger  partnerAssetMinunit;
-    private int  partnerGroupId;
 
 }

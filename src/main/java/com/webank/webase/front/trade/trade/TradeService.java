@@ -107,11 +107,11 @@ public class TradeService {
         BigInteger minUint = withDrawReq.getPartnerAssetMinunit();
 
         if(minUint == null) {
-          BAC001 bac001 = getBAC001(withDrawReq.getPartnerGroupId(), userAddress, withDrawReq.getPartnerAssetAddress());
+          BAC001 bac001 = getBAC001(groupId, userAddress, withDrawReq.getPartnerAssetAddress());
           minUint = bac001.minUnit().send();
        }
         BigInteger realValue  =  BigInteger.valueOf((long) Math.pow(10, minUint.doubleValue())).multiply(withDrawReq.getValue());
-        chekoutCounterpartyDeposit(realValue ,withDrawReq.getContractId(), groupId,userAddress,htlcContractAddress);
+        chekoutCounterpartyDeposit(realValue ,withDrawReq.getContractId(), groupId,userAddress, htlcContractAddress);
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
 
         byte[] contractId = Util.hexStringToBytes(withDrawReq.getContractId().substring(2));
