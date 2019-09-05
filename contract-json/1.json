@@ -51,11 +51,11 @@
   },
   {
     // 取对方资金
-    "request": "http://localhost:5002/WeBASE-Front/trade/withdraw?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&htlcContractAddress=0x9e4b1610df3757ee98f46de4de5b3ae11dd351db",
-    "body": {
-      "contractId": "0x1fd725186ccca72d94f8ddf2a7f22cc12cd0c54537094b245537b4acc317c262",
-      "secerte": "hello",
-      "value": 200
+    "request": "http://localhost:5002/trade/withdraw?userAddress=0x79e0de225b262fed0f3b13829d5dc31715949a33&htlcContractAddress=0x5fc64cbce223ccbb7e94ab88d32efdb8008580d4&groupId=2",
+    "body": {	"contractId": "0x5b2cc26ea148a8b04d700fd995f4f41ae805f8f3e4e0d283c1037e9020d9fee0",
+      "secerte":"hello",
+      "value": 200,
+      "partnerAssetAddress":"0x4f692960c44f3ecf9beb264b2965b8db173c0f78"
     },
     "response": {
       0x0000000000000000000000000000000000000000000000000000000000000001
