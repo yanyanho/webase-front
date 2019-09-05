@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Map;
 
 import static com.webank.webase.front.base.Constants.contractGasProvider;
@@ -31,18 +32,20 @@ public class AssetService {
     @Autowired
     KeyStoreService keyStoreService;
 
-    public BigInteger assetBalance(String contractName, String contractAddress, String userAddress, int groupId) throws FrontException {
-        BigInteger balance = new BigInteger("0");
+    public BigDecimal assetBalance(String contractName, String contractAddress, String userAddress, int groupId) throws FrontException {
+        BigDecimal balance = new BigDecimal("0");
         if (!userAddress.equals("0x0000000000000000000000000000000000000000")) {
             try {
                 if ("BAC001".equals(contractName)) {
                     BAC001 bac001 = getBAC001OnlyQueryChain(groupId, contractAddress);
                     BigInteger minUnit = bac001.minUnit().send();
                     BigInteger unit = BigInteger.valueOf((long) Math.pow(10, minUnit.doubleValue()));
-                    balance = bac001.balance(userAddress).send().divide(unit);
+                    BigInteger userBalance = bac001.balance(userAddress).send();
+                     balance = new BigDecimal(userBalance).divide(new BigDecimal(unit), minUnit.intValue(), RoundingMode.HALF_EVEN);
+
                 } else {
                     BAC002 bac002 = getBAC002OnlyQueryChain(groupId,  contractAddress);
-                    balance = bac002.balance(userAddress).send();
+                    balance = new BigDecimal(bac002.balance(userAddress).send());
                 }
             } catch (Exception e) {
                 log.error("assetBalance assetId:{} Exception", contractName, e);
@@ -128,7 +131,7 @@ public class AssetService {
                   minUnit = bac001.minUnit().send();
              }
             BigInteger realAmount = BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue())).multiply( sendReq.getValue()).toBigInteger();
-          TransactionReceipt transactionReceipt =  bac001.send(to,realAmount,data).send();
+           TransactionReceipt transactionReceipt =  bac001.send(to,realAmount,data).send();
             dealWithReceipt(transactionReceipt);
             return true;
         }
