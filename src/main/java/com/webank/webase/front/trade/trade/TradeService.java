@@ -74,10 +74,11 @@ public class TradeService {
         BigInteger value =   BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount()).toBigInteger();
 
         int initiatorGroupId  =  contractReq.getInitiatorInfo().getInitiatorGroupId();
-        BigInteger initiatorValue = contractReq.getInitiatorInfo().getInitiatorValue();
+        BigDecimal initiatorValue = contractReq.getInitiatorInfo().getInitiatorValue();
         String initiatorAssetContractAddress = contractReq.getInitiatorInfo().getInitiatorAssetContractAddress();
         BigInteger initiatorMinUnit = contractReq.getInitiatorInfo().getInitiatorAssetMinunit();
         BigInteger initiatorRealValue = getInitiatorValue(initiatorMinUnit, userAddress, initiatorGroupId, initiatorValue, initiatorAssetContractAddress);
+        log.info("initiatorRealValue ： " + initiatorRealValue);
 
         chekoutCounterpartyDeposit(initiatorRealValue,contractReq.getInitiatorInfo().getInitiatorContractId(), initiatorGroupId ,userAddress,contractReq.getInitiatorInfo().getInitiatorHtlcContractAddress());
 
@@ -96,12 +97,12 @@ public class TradeService {
 
     }
 
-    private BigInteger getInitiatorValue(BigInteger initiatorMinUnit, String userAddress, int initiatorGroupId, BigInteger initiatorValue, String initiatorAssetContractAddress) throws Exception {
+    private BigInteger getInitiatorValue(BigInteger initiatorMinUnit, String userAddress, int initiatorGroupId, BigDecimal initiatorValue, String initiatorAssetContractAddress) throws Exception {
         BAC001 initiatorBac001 = getBAC001(initiatorGroupId,userAddress,initiatorAssetContractAddress);
-        if(initiatorMinUnit ==null) {
+        if(initiatorMinUnit == null) {
              initiatorMinUnit = initiatorBac001.minUnit().send();
         }
-        return BigInteger.valueOf((long) Math.pow(10, initiatorMinUnit.doubleValue())).multiply(initiatorValue);
+        return BigDecimal.valueOf( Math.pow(10, initiatorMinUnit.doubleValue())).multiply(initiatorValue).toBigInteger();
     }
 
     public String withdraw(WithDrawReq withDrawReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
