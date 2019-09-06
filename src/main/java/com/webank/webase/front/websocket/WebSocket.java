@@ -59,6 +59,7 @@ public class WebSocket {
             toAll(message);
         } else {
             //点对点
+            log.info("from: " + vo.getProductorId() + "to: " + vo.getComsumerId());
             one2one(vo, message);
         }
     }
