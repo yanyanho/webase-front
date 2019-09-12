@@ -1,0 +1,70 @@
+[
+
+  {
+    // 存钱
+    "request": "http://localhost:5002/exchange/deposit?groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac&userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+    "body": {
+    "assetContractAddress": "0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
+    "amount": 100,
+    "minUnit": 0
+    },
+    "response": {
+        ture
+    }
+  },
+  {
+    // 取现
+    "request": "http://localhost:5002/exchange/withdraw?groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac&userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+    "body": {
+      "assetContractAddress": "0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
+      "amount": 100,
+      "minUnit": 0
+
+    }
+    },
+    "response": {
+      ture
+    }
+  },
+  {
+    // 挂单
+    "request": "http://localhost:5002/exchange/order?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac",
+    "body":{
+      "amountGet": 500,
+      "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
+      "amountGive": 1000,
+      "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
+      "expires": 1567485573000,
+      "assetGetMinUnit": 0,
+      "assetGiveMinUnit": 0
+
+    }},
+    "response": {
+     0xea6cad205b75de94c73580d51059563be8fbb70bab73a39c6ed0f34e77ec182b
+    }
+  },
+  {
+    // 查询htlc-exchange详情
+    "request": "http://localhost:5002/htlc-exchange",
+    "response":
+  [
+      {
+        "id": 65,
+        "groupId": 1,
+        "contractAddress": "0x550f316bf66e2b3476b9e12587866700492d7562",
+        "exchangeContractAddress": "0x940f88649d739e874f6187950b66d94fd2e12485",
+        "createTime": "2019-09-11 21:31:12"
+      },
+      {
+        "id": 66,
+        "groupId": 2,
+        "contractAddress": "0x550f316bf66e2b3476b9e12587866700492d7562",
+        "exchangeContractAddress": "0x940f88649d739e874f6187950b66d94fd2e12485",
+        "createTime": "2019-09-11 21:31:14"
+      }
+
+  ]
+
+}
+]
+

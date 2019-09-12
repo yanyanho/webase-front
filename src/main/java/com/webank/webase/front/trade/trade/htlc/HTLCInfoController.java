@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/htlc")
+@RequestMapping(value = "/htlc-exchange")
 public class HTLCInfoController {
 
 
