@@ -18,7 +18,7 @@ public class HTLCInfoService {
     }
 
      public List<HTLCInfo> findAll() {
-         Iterable<HTLCInfo> htlcInfos  =     htlcInfoRepository.findAll();
+         Iterable<HTLCInfo> htlcInfos  =   htlcInfoRepository.findAll();
          List<HTLCInfo> list =new ArrayList<>();
          htlcInfos.forEach(single ->{list.add(single);});
          return  list;
@@ -28,4 +28,8 @@ public class HTLCInfoService {
         htlcInfoRepository.save(htlcInfo);
      }
 
+
+     public  void deleteAll() {
+        htlcInfoRepository.deleteAll();
+     }
 }

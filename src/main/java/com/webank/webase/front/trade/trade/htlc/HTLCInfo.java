@@ -20,6 +20,7 @@ public class HTLCInfo {
     private Long id;
     private int groupId;
     private String contractAddress;
+    private String exchangeContractAddress;
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }
