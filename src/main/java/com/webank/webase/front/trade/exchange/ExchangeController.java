@@ -1,9 +1,7 @@
 package com.webank.webase.front.trade.exchange;
 
-import com.webank.webase.front.trade.exchange.Order.Order;
+import com.webank.webase.front.trade.exchange.Order.ExchangeOrder;
 import com.webank.webase.front.trade.exchange.Order.OrderService;
-import com.webank.webase.front.trade.request.RefundReq;
-import com.webank.webase.front.trade.request.WithDrawReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,15 +68,12 @@ public class ExchangeController {
 
     @RequestMapping("/trade")
     @ApiOperation(value = "trade order", httpMethod = "POST")
-    public String trade (@RequestBody TradeReq tradeReq,
+    public Boolean trade (@RequestBody TradeReq tradeReq,
                           @RequestParam(defaultValue = "1") int groupId,
                           @RequestParam String userAddress,
                           @RequestParam String exchangeContractAddress) throws Exception {
-        return exchangeService.trade(tradeReq,groupId,userAddress,exchangeContractAddress);
+        return exchangeService.trade(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
     }
-
-
-
 
     @RequestMapping("/address")
     @ApiOperation(value = "address", httpMethod = "GET")
@@ -89,9 +84,9 @@ public class ExchangeController {
 
     @RequestMapping("/order/available")
     @ApiOperation(value = "address", httpMethod = "GET")
-    public Page<Order> getAvailableOrder(   @RequestParam(defaultValue = "1") int pageNumber,
-                                            @RequestParam(defaultValue = "10")   int pageSize)   {
-        return orderService.getAvailableOrder(pageNumber, pageSize,2);
+    public Page<ExchangeOrder> getAvailableOrder(@RequestParam(defaultValue = "0") int pageNumber,
+                                                  @RequestParam(defaultValue = "10")   int pageSize)   {
+        return orderService.getAvailableOrder(pageNumber, pageSize,0);
     }
 
 }

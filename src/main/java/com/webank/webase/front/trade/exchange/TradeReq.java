@@ -10,4 +10,5 @@ public class TradeReq {
 
   private BigDecimal amount;
   private BigInteger assetGiveMinUnit;
+  private String orderHash;
 }

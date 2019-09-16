@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class Order {
+public class ExchangeOrder {
     @Id
-    private String    orderHash;
-    //0 待处理  1 处理中  2 订单完成
+    private String orderHash;
+    //0 订单部分处理  1 订单完成 3 超时 4 取消
+    //  EXPIRED, CANCELLED, FILLABLE, FULLY_FILLED
     private int    status;
     private BigInteger availableVolumn;
     private BigInteger random;
@@ -28,6 +29,7 @@ public class Order {
     private BigInteger v;
     private String     r;
     private String     s;
+    private String maker;
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
      private LocalDateTime createTime;
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
