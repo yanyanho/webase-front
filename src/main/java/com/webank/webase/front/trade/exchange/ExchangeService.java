@@ -7,8 +7,9 @@ import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.keystore.KeyStoreService;
 import com.webank.webase.front.trade.asset.BAC001;
 import com.webank.webase.front.trade.asset.Exchange;
-//import com.webank.webase.front.trade.exchange.Order.Order;
-import com.webank.webase.front.trade.exchange.Order.Order;
+//import com.webank.webase.front.trade.exchange.ExchangeOrder.ExchangeOrder;
+import com.webank.webase.front.trade.exchange.Order.ExchangeOrder;
+import com.webank.webase.front.trade.exchange.Order.OrderService;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import com.webank.webase.front.util.DecodeOutputUtils;
@@ -26,11 +27,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import static com.webank.webase.front.base.Constants.contractGasProvider;
 import static com.webank.webase.front.base.CryptoUtil.bytesToHex;
@@ -49,6 +49,9 @@ public class ExchangeService {
 
     @Autowired
     HTLCInfoService htlcInfoService;
+
+    @Autowired
+    OrderService orderService;
 
     public static Map<Integer, String> imap = new HashMap<>();
 
@@ -108,26 +111,28 @@ public class ExchangeService {
           String s   =     bytesToHex(sigData.getS());
           log.info("s: = " + s);
 
-        Order order = new Order();
-        order.setOrderHash(orderHash);
-        order.setRandom(randomid);
-        order.setAssetGet(orderReq.getAssetGet());
-        order.setAmountGet(amountGetValue);
-        order.setAssetGive(orderReq.getAssetGive());
-        order.setAmountGive(amountGiveValue);
-        order.setExpires(orderReq.getExpires());
-        order.setAssetGetMinUnit(orderReq.getAssetGetMinUnit());
-        order.setAssetGiveMinUnit(orderReq.getAssetGiveMinUnit());
-        order.setV(v);
-        order.setR(r);
-        order.setS(s);
-        order.setStatus(0);
-        saveOrderToDB(order);
+        ExchangeOrder exchangeOrder = new ExchangeOrder();
+        exchangeOrder.setOrderHash(orderHash);
+        exchangeOrder.setRandom(randomid);
+        exchangeOrder.setAssetGet(orderReq.getAssetGet());
+        exchangeOrder.setAmountGet(amountGetValue);
+        exchangeOrder.setAssetGive(orderReq.getAssetGive());
+        exchangeOrder.setAmountGive(amountGiveValue);
+        exchangeOrder.setExpires(orderReq.getExpires());
+        exchangeOrder.setAssetGetMinUnit(orderReq.getAssetGetMinUnit());
+        exchangeOrder.setAssetGiveMinUnit(orderReq.getAssetGiveMinUnit());
+        exchangeOrder.setV(v);
+        exchangeOrder.setR(r);
+        exchangeOrder.setS(s);
+        exchangeOrder.setStatus(0);
+        exchangeOrder.setUpdateTime(LocalDateTime.now());
+        exchangeOrder.setMaker(userAddress);
+        saveOrderToDB(exchangeOrder);
         return orderHash;
     }
 
-    private void saveOrderToDB(Order orderHash) {
-
+    private void saveOrderToDB(ExchangeOrder exchangeOrderHash) {
+         orderService.save(exchangeOrderHash);
 
 
     }
@@ -197,8 +202,20 @@ public class ExchangeService {
         return exchange;
     }
 
-    public String trade(TradeReq tradeReq, int groupId, String userAddress, String exchangeContractAddress) {
+    public Boolean trade(String orderHash, BigDecimal amount, BigInteger assetGiveMinUnit, int groupId, String userAddress, String exchangeContractAddress) throws Exception {
 
- return "";
+        Exchange exchange = getExchangeBAC001(groupId, userAddress, exchangeContractAddress);
+        ExchangeOrder exchangeOrder =  orderService.findById(orderHash);
+
+        //trade(address assetGet, uint amountGet, address assetGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
+
+        BigInteger takerAmount =   amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
+
+        TransactionReceipt transactionReceipt = exchange.trade(exchangeOrder.getAssetGet(),exchangeOrder.getAmountGet(), exchangeOrder.getAssetGive(),exchangeOrder.getAmountGive(),exchangeOrder.getExpires(),exchangeOrder.getRandom(),exchangeOrder.getMaker(),
+                exchangeOrder.getV(),exchangeOrder.getR().getBytes(),exchangeOrder.getS().getBytes(),takerAmount).send();
+
+        dealWithReceipt(transactionReceipt);
+
+        return true;
     }
 }

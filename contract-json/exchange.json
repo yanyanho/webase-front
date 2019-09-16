@@ -65,6 +65,95 @@
 
   ]
 
-}
+},
+
+  {
+    "request": "http://localhost:5002/exchange/order?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac",
+    "body":{
+      "amountGet": 500,
+      "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
+      "amountGive": 1000,
+      "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
+      "expires": 1567485573000,
+      "assetGetMinUnit": 0,
+      "assetGiveMinUnit": 0
+    },
+    "reponse": {
+      "content": [
+        {
+          "orderHash": "0x36b2e0461d4a15846e27f8663f9d0f980fb31726a7f3295b0ede46e6e9242839",
+          "status": 0,
+          "availableVolumn": null,
+          "random": 1568605686597,
+          "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
+          "amountGet": 500,
+          "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
+          "amountGive": 1000,
+          "expires": 1577485573000,
+          "assetGetMinUnit": 0,
+          "assetGiveMinUnit": 0,
+          "v": 27,
+          "r": "519E70B7380ABF88BD3C3B6A947B35F1B408D1C132FA8C5A2ED5D1C33F8F9DDC",
+          "s": "0361B365016CD75F5AD5E73931D72460BDAD800A3F4E671550B653D359B298F4",
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "orderHash": "0xb249d32d95ed97a6cd569ea7baa7a63dd159d4cb3506a6763c4ee1706bc6e219",
+          "status": 0,
+          "availableVolumn": null,
+          "random": 1568604420808,
+          "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
+          "amountGet": 500,
+          "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
+          "amountGive": 1000,
+          "expires": 1577485573000,
+          "assetGetMinUnit": 0,
+          "assetGiveMinUnit": 0,
+          "v": 27,
+          "r": "0E699990A265AC764D4796DD00403C9C57F97BAB958FFA1534FB5EDA3A938CF4",
+          "s": "5D190A6A9E3D36E3EA3450F8DF757BA2159F311B49752C76870EF2D266FDBD62",
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "orderHash": "0x3f50876ce5c2e2a0305cb6dd3e92baa66e20198b0d3fc61729f9fade1e0b5398",
+          "status": 0,
+          "availableVolumn": null,
+          "random": 1568270355918,
+          "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
+          "amountGet": 500,
+          "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
+          "amountGive": 1000,
+          "expires": 1567485573000,
+          "assetGetMinUnit": 0,
+          "assetGiveMinUnit": 0,
+          "v": 28,
+          "r": "6844A99857AC0B3E6D227D59528316E92B45072D8B134866238FB0C14158AE0E",
+          "s": "5E0907EBC08C9A76FF0E659E185E762EDF3A371F61E742AE205F1B3DC5137106",
+          "createTime": null,
+          "updateTime": null
+        }
+      ],
+      "totalElements": 3,
+      "last": true,
+      "totalPages": 1,
+      "number": 0,
+      "size": 10,
+      "sort": [
+        {
+          "direction": "DESC",
+          "property": "updateTime",
+          "ignoreCase": false,
+          "nullHandling": "NATIVE",
+          "ascending": false,
+          "descending": true
+        }
+      ],
+      "numberOfElements": 3,
+      "first": true
+    }
+  }
+
 ]
 
