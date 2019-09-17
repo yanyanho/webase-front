@@ -37,7 +37,8 @@ public class HTLCDeploy  implements ApplicationRunner {
             Map.Entry entry = (Map.Entry) entries.next();
             Integer key =  (Integer)entry.getKey();
             Web3j value = (Web3j) entry.getValue();
-            if(htlcInfoService.findByGroupId(key.intValue()) == null) {
+         //   htlcInfoService.deleteAll();
+           if(htlcInfoService.findByGroupId(key.intValue()) == null ) {
                 String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
                 String exchangeContractAddress = Exchange.deploy(value, credentials, contractGasProvider,credentials.getAddress()).send().getContractAddress();
 

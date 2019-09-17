@@ -206,16 +206,15 @@ public class ExchangeService {
 
         Exchange exchange = getExchangeBAC001(groupId, userAddress, exchangeContractAddress);
         ExchangeOrder exchangeOrder =  orderService.findById(orderHash);
-
+        log.info("orderhash: " + exchangeOrder.getOrderHash()  + "create time: "  + exchangeOrder.getCreateTime());
         //trade(address assetGet, uint amountGet, address assetGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
 
-        BigInteger takerAmount =   amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
+        BigInteger takerAmount = amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
 
         TransactionReceipt transactionReceipt = exchange.trade(exchangeOrder.getAssetGet(),exchangeOrder.getAmountGet(), exchangeOrder.getAssetGive(),exchangeOrder.getAmountGive(),exchangeOrder.getExpires(),exchangeOrder.getRandom(),exchangeOrder.getMaker(),
-                exchangeOrder.getV(),exchangeOrder.getR().getBytes(),exchangeOrder.getS().getBytes(),takerAmount).send();
+                exchangeOrder.getV(), Util.hexStringToBytes(exchangeOrder.getR()), Util.hexStringToBytes(exchangeOrder.getS()),takerAmount).send();
 
         dealWithReceipt(transactionReceipt);
-
         return true;
     }
 }
