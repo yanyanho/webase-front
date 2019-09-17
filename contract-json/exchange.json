@@ -27,6 +27,14 @@
     }
   },
   {
+    // 余额查询
+    "request": "http://localhost:5002/exchange/balance?exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac&userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&minUnit=0&assetAddress=0x4f692960c44f3ecf9beb264b2965b8db173c0f78",
+    "response": {
+      0
+    }
+  },
+
+  {
     // 挂单
     "request": "http://localhost:5002/exchange/order?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac",
     "body":{
@@ -67,17 +75,9 @@
 
 },
 
+  //可交易订单查询
   {
     "request": "http://localhost:5002/exchange/order?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac",
-    "body":{
-      "amountGet": 500,
-      "assetGet": "0x9e68093069398542ccfb867f4dfccf3a5615316c",
-      "amountGive": 1000,
-      "assetGive": "0x684baf86d3364b2dd20709bdbc4baddd6e965e1c",
-      "expires": 1567485573000,
-      "assetGetMinUnit": 0,
-      "assetGiveMinUnit": 0
-    },
     "reponse": {
       "content": [
         {
@@ -152,6 +152,18 @@
       ],
       "numberOfElements": 3,
       "first": true
+    }
+  },
+  {
+    // 买方交易订单
+    "request": "http://localhost:5002/exchange/trade?groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac&userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+    "body": {
+      "orderHash": "0xe0cb4ca6f6d5167b6ad6c4770cd2fa6d2d84e19dc4bb9cf167fdcb3d0524f9a4",
+      "amount": 100,
+      "assetGiveMinUnit": 0
+    },
+    "response": {
+      ture
     }
   }
 
