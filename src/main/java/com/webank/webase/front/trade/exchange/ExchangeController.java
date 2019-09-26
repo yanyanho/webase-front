@@ -69,9 +69,9 @@ public class ExchangeController {
     @RequestMapping("/trade")
     @ApiOperation(value = "trade order", httpMethod = "POST")
     public Boolean trade (@RequestBody TradeReq tradeReq,
-                          @RequestParam(defaultValue = "1") int groupId,
-                          @RequestParam String userAddress,
-                          @RequestParam String exchangeContractAddress) throws Exception {
+                           @RequestParam(defaultValue = "1") int groupId,
+                           @RequestParam String userAddress,
+                           @RequestParam String exchangeContractAddress) throws Exception {
         return exchangeService.trade(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
     }
 
