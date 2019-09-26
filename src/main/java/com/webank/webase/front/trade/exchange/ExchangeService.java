@@ -215,6 +215,8 @@ public class ExchangeService {
                 exchangeOrder.getV(), Util.hexStringToBytes(exchangeOrder.getR()), Util.hexStringToBytes(exchangeOrder.getS()),takerAmount).send();
 
         dealWithReceipt(transactionReceipt);
+        exchangeOrder.setStatus(1);
+        orderService.save(exchangeOrder);
         return true;
     }
 }

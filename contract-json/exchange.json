@@ -77,7 +77,7 @@
 
   //可交易订单查询
   {
-    "request": "http://localhost:5002/exchange/order?userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155&groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac",
+    "request": "http://localhost:5002/exchange/order/available",
     "reponse": {
       "content": [
         {
