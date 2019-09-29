@@ -28,7 +28,6 @@ import java.util.List;
 
     public Page<ExchangeOrder> getAvailableOrder(int pageNumber, int pageSize, int status) {
         Pageable pageable = new PageRequest(pageNumber, pageSize, Sort.Direction.DESC, "updateTime");
-
         Page<ExchangeOrder> ordersPage = orderRepository.findAll(
                 (Root<ExchangeOrder> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             //        Predicate predicate = FrontUtils.buildPredicate(root, criteriaBuilder, status);

@@ -165,6 +165,18 @@
     "response": {
       ture
     }
+  } ,
+  {
+    // 取消交易订单
+    "request": "http://localhost:5002/exchange/cancel?groupId=1&exchangeContractAddress=0x852e95e403b5f96d99119634a0bbfed550faebac&userAddress=0x2c68104e60bdd6367ad8d09b8d226903c2b80155",
+    "body": {
+      "orderHash": "0xe0cb4ca6f6d5167b6ad6c4770cd2fa6d2d84e19dc4bb9cf167fdcb3d0524f9a4",
+      "amount": 100,
+      "assetGiveMinUnit": 0
+    },
+    "response": {
+      ture
+    }
   }
 
 ]

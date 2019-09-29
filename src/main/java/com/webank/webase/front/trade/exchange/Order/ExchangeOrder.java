@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 public class ExchangeOrder {
     @Id
     private String orderHash;
-    //0 订单部分处理  1 订单完成 3 超时 4 取消
+    //0 订单部分处理（包括新订单）  1 订单完成 3 超时 4 取消
     //  EXPIRED, CANCELLED, FILLABLE, FULLY_FILLED
     private int    status;
     private BigInteger availableVolumn;
