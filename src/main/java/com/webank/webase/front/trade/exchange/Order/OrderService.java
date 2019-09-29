@@ -1,6 +1,5 @@
 package com.webank.webase.front.trade.exchange.Order;
 
-import com.webank.webase.front.base.FrontUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,8 +11,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Service
     public class OrderService {
@@ -43,7 +44,16 @@ import java.util.List;
 
 
     public ExchangeOrder findById(String orderHash) {
-       return  orderRepository.findOne(orderHash);
+        return orderRepository.findOne(orderHash);
     }
 
+
+    /**
+     * 将过期时间小于当前时间的订单设置为超时
+     */
+    @Transactional
+    public void updateExpireOrder() {
+        Long currentMilli = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        orderRepository.updateExpireOrder(BigInteger.valueOf(currentMilli));
+    }
 }
