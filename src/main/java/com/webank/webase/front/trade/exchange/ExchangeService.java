@@ -116,6 +116,7 @@ public class ExchangeService {
         exchangeOrder.setRandom(randomid);
         exchangeOrder.setAssetGet(orderReq.getAssetGet());
         exchangeOrder.setAmountGet(amountGetValue);
+        exchangeOrder.setAmountGetLeft(amountGetValue);
         exchangeOrder.setAssetGive(orderReq.getAssetGive());
         exchangeOrder.setAmountGive(amountGiveValue);
         exchangeOrder.setExpires(orderReq.getExpires());
@@ -216,12 +217,12 @@ public class ExchangeService {
 
         dealWithReceipt(transactionReceipt);
 
-        if(takerAmount.intValue() == exchangeOrder.getAmountGive().intValue() ) {
+        if(takerAmount.intValue() == exchangeOrder.getAmountGetLeft().intValue() ) {
             exchangeOrder.setStatus(1);
         }
         else {
-            BigInteger oldAmountGive = exchangeOrder.getAmountGive();
-            exchangeOrder.setAmountGive(oldAmountGive.subtract(takerAmount));
+            BigInteger oldAmountGet = exchangeOrder.getAmountGetLeft();
+            exchangeOrder.setAmountGetLeft(oldAmountGet.subtract(takerAmount));
         }
         orderService.save(exchangeOrder);
         return true;
