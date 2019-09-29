@@ -196,9 +196,6 @@ public class AssetService {
         }
 
 
-        AssetDO assetInDb = assetRepository.findByAssetGroupAndShortName(groupId, issueReq.getShortName());
-        Assert.isNull(assetInDb, "duplicate shortName");
-
         AssetDO assetDO = new AssetDO();
         assetDO.setContractName(contractName)
                 .setAssetGroup(groupId)

@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssetRepository extends
         JpaRepository<AssetDO, String>, JpaSpecificationExecutor<AssetDO> {
-    AssetDO findByAssetGroupAndShortName(int group, String shortName);
 }
