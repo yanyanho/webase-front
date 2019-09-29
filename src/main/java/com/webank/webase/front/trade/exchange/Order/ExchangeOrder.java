@@ -20,6 +20,7 @@ public class ExchangeOrder {
     private BigInteger random;
     private String     assetGet;
     private BigInteger amountGet;
+    private BigInteger amountGetLeft;
     private String     assetGive;
     private BigInteger amountGive;
     private BigInteger expires;
