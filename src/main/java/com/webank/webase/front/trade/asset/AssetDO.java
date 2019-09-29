@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_asset", uniqueConstraints = @UniqueConstraint(columnNames = {"asset_group", "short_name"}))
+@Table(name = "tb_asset")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class AssetDO implements Serializable {
     @Id
