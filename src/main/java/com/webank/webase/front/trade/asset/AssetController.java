@@ -1,11 +1,17 @@
 package com.webank.webase.front.trade.asset;
 
+import com.alibaba.fastjson.JSON;
+import com.webank.webase.front.base.BasePageResponse;
+import com.webank.webase.front.base.ConstantCode;
+import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.request.SendReq;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,31 +32,46 @@ public class AssetController {
     public BigDecimal assetBalance(@RequestParam(defaultValue = "BAC001") String contractName,
                                    @RequestParam String contractAddress,
                                    @RequestParam String userAddress,
-                                   @RequestParam(defaultValue = "1") int groupId)  {
-            return assetService.assetBalance(contractName,contractAddress, userAddress,groupId);
+                                   @RequestParam(defaultValue = "1") int groupId) {
+        return assetService.assetBalance(contractName, contractAddress, userAddress, groupId);
     }
 
     @ApiOperation(value = "assetInfo", notes = "Get asset's info")
     @GetMapping("/info")
     public BACInfo assetInfo(@RequestParam(defaultValue = "BAC001") String contractName,
-                              @RequestParam String contractAddress,
-                              @RequestParam(defaultValue = "1") int groupId) throws Exception {
-            return assetService.assetInfo(contractName,contractAddress,groupId);
+                             @RequestParam String contractAddress,
+                             @RequestParam(defaultValue = "1") int groupId) throws Exception {
+        return assetService.assetInfo(contractName, contractAddress, groupId);
     }
 
     @PostMapping("/transfer")
-    public Boolean assetTransfer( @RequestBody SendReq sendReq,
-                                   @RequestParam(defaultValue = "BAC001") String contractName,
-                                   @RequestParam String contractAddress,
-                                   @RequestParam(defaultValue = "1") int groupId) throws Exception {
-          return   assetService.sendFund(sendReq,contractName,contractAddress,groupId);
+    public Boolean assetTransfer(@RequestBody SendReq sendReq,
+                                 @RequestParam(defaultValue = "BAC001") String contractName,
+                                 @RequestParam String contractAddress,
+                                 @RequestParam(defaultValue = "1") int groupId) throws Exception {
+        return assetService.sendFund(sendReq, contractName, contractAddress, groupId);
     }
 
     @PostMapping("/issue")
-    public String assetIssue ( @RequestBody IssueReq issueReq,
-                               @RequestParam(defaultValue = "BAC001") String contractName,
-                               @RequestParam String userAddress,
-                               @RequestParam(defaultValue = "1") int groupId) throws Exception {
-        return   assetService.issueAsset(issueReq,contractName,userAddress,groupId);
+    public String assetIssue(@RequestBody IssueReq issueReq,
+                             @RequestParam(defaultValue = "BAC001") String contractName,
+                             @RequestParam String userAddress,
+                             @RequestParam(defaultValue = "1") int groupId) throws Exception {
+        return assetService.issueAsset(issueReq, contractName, userAddress, groupId);
+    }
+
+    /**
+     * query list of asset.
+     */
+    @ApiOperation(value = "query list of asset", notes = "query list of asset ")
+    @ApiImplicitParam(name = "req", value = "param info", required = true, dataType = "ReqPageAsset")
+    @PostMapping(value = "/assetList")
+    public BasePageResponse findByPage(@RequestBody ReqPageAsset req) throws FrontException {
+        log.info("findByPage start. ReqPageAsset:{}", JSON.toJSONString(req));
+        Page<AssetDO> page = assetService.findAssetByPage(req);
+        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
+        response.setTotalCount(page.getTotalElements());
+        response.setData(page.getContent());
+        return response;
     }
 }
