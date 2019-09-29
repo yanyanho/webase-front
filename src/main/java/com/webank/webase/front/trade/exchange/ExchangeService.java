@@ -6,8 +6,8 @@ import com.webank.webase.front.base.CryptoUtil;
 import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.keystore.KeyStoreService;
 import com.webank.webase.front.trade.asset.BAC001;
-import com.webank.webase.front.trade.asset.Exchange;
 //import com.webank.webase.front.trade.exchange.ExchangeOrder.ExchangeOrder;
+import com.webank.webase.front.trade.asset.Exchange;
 import com.webank.webase.front.trade.exchange.Order.ExchangeOrder;
 import com.webank.webase.front.trade.exchange.Order.OrderService;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
@@ -215,7 +215,33 @@ public class ExchangeService {
                 exchangeOrder.getV(), Util.hexStringToBytes(exchangeOrder.getR()), Util.hexStringToBytes(exchangeOrder.getS()),takerAmount).send();
 
         dealWithReceipt(transactionReceipt);
-        exchangeOrder.setStatus(1);
+
+        if(takerAmount.intValue() == exchangeOrder.getAmountGive().intValue() ) {
+            exchangeOrder.setStatus(1);
+        }
+        else {
+            BigInteger oldAmountGive = exchangeOrder.getAmountGive();
+            exchangeOrder.setAmountGive(oldAmountGive.subtract(takerAmount));
+        }
+        orderService.save(exchangeOrder);
+        return true;
+    }
+
+
+    public Boolean cancel(String orderHash, BigDecimal amount, BigInteger assetGiveMinUnit, int groupId, String userAddress, String exchangeContractAddress) throws Exception {
+
+        Exchange exchange = getExchangeBAC001(groupId, userAddress, exchangeContractAddress);
+        ExchangeOrder exchangeOrder =  orderService.findById(orderHash);
+
+        //trade(address assetGet, uint amountGet, address assetGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
+
+      //  BigInteger takerAmount = amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
+
+        TransactionReceipt transactionReceipt = exchange.cancelOrder(exchangeOrder.getAssetGet(),exchangeOrder.getAmountGet(), exchangeOrder.getAssetGive(),exchangeOrder.getAmountGive(),exchangeOrder.getExpires(),exchangeOrder.getRandom(),
+         exchangeOrder.getV(), Util.hexStringToBytes(exchangeOrder.getR()), Util.hexStringToBytes(exchangeOrder.getS())).send();
+
+        dealWithReceipt(transactionReceipt);
+        exchangeOrder.setStatus(4);
         orderService.save(exchangeOrder);
         return true;
     }

@@ -75,6 +75,15 @@ public class ExchangeController {
         return exchangeService.trade(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
     }
 
+    @RequestMapping("/cancel")
+    @ApiOperation(value = "cancel order", httpMethod = "POST")
+    public Boolean cancle (@RequestBody TradeReq tradeReq,
+                           @RequestParam(defaultValue = "1") int groupId,
+                           @RequestParam String userAddress,
+                           @RequestParam String exchangeContractAddress) throws Exception {
+        return exchangeService.cancel(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
+    }
+
     @RequestMapping("/address")
     @ApiOperation(value = "address", httpMethod = "GET")
     public Map getHTLCAddress()   {
@@ -84,9 +93,11 @@ public class ExchangeController {
 
     @RequestMapping("/order/available")
     @ApiOperation(value = "address", httpMethod = "GET")
-    public Page<ExchangeOrder> getAvailableOrder(@RequestParam(defaultValue = "0") int pageNumber,
+    public Page<ExchangeOrder> getAvailableOrder(
+                                                  @RequestParam(defaultValue = "0") int status,
+                                                  @RequestParam(defaultValue = "0") int pageNumber,
                                                   @RequestParam(defaultValue = "10")   int pageSize)   {
-        return orderService.getAvailableOrder(pageNumber, pageSize,0);
+        return orderService.getAvailableOrder(pageNumber, pageSize,status);
     }
 
 }
