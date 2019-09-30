@@ -9,6 +9,6 @@ import java.math.BigInteger;
 public class TradeReq {
 
   private BigDecimal amount;
-  private BigInteger assetGiveMinUnit;
+  private BigInteger assetGetMinUnit;
   private String orderHash;
 }

@@ -203,14 +203,14 @@ public class ExchangeService {
         return exchange;
     }
 
-    public Boolean trade(String orderHash, BigDecimal amount, BigInteger assetGiveMinUnit, int groupId, String userAddress, String exchangeContractAddress) throws Exception {
+    public Boolean trade(String orderHash, BigDecimal amount, BigInteger assetGetMinUnit, int groupId, String userAddress, String exchangeContractAddress) throws Exception {
 
         Exchange exchange = getExchangeBAC001(groupId, userAddress, exchangeContractAddress);
         ExchangeOrder exchangeOrder =  orderService.findById(orderHash);
         log.info("orderhash: " + exchangeOrder.getOrderHash()  + "create time: "  + exchangeOrder.getCreateTime());
         //trade(address assetGet, uint amountGet, address assetGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
 
-        BigInteger takerAmount = amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
+        BigInteger takerAmount = amount.multiply(BigDecimal.valueOf( Math.pow(10,assetGetMinUnit.doubleValue()))).toBigInteger();
 
         TransactionReceipt transactionReceipt = exchange.trade(exchangeOrder.getAssetGet(),exchangeOrder.getAmountGet(), exchangeOrder.getAssetGive(),exchangeOrder.getAmountGive(),exchangeOrder.getExpires(),exchangeOrder.getRandom(),exchangeOrder.getMaker(),
                 exchangeOrder.getV(), Util.hexStringToBytes(exchangeOrder.getR()), Util.hexStringToBytes(exchangeOrder.getS()),takerAmount).send();
@@ -218,11 +218,16 @@ public class ExchangeService {
         dealWithReceipt(transactionReceipt);
 
         if(takerAmount.intValue() == exchangeOrder.getAmountGetLeft().intValue() ) {
+            log.info( "takeramount: "+ takerAmount.intValue());
+            log.info( "amoutget: "+ exchangeOrder.getAmountGetLeft().intValue());
             exchangeOrder.setStatus(1);
         }
         else {
+
             BigInteger oldAmountGet = exchangeOrder.getAmountGetLeft();
             exchangeOrder.setAmountGetLeft(oldAmountGet.subtract(takerAmount));
+            log.info(" oldAmountGet:" + oldAmountGet);
+            log.info(" amoutget:" + oldAmountGet.subtract(takerAmount));
         }
         orderService.save(exchangeOrder);
         return true;

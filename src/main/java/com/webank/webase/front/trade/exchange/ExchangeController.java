@@ -72,7 +72,7 @@ public class ExchangeController {
                            @RequestParam(defaultValue = "1") int groupId,
                            @RequestParam String userAddress,
                            @RequestParam String exchangeContractAddress) throws Exception {
-        return exchangeService.trade(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
+        return exchangeService.trade(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGetMinUnit(),groupId,userAddress,exchangeContractAddress);
     }
 
     @RequestMapping("/cancel")
@@ -81,7 +81,7 @@ public class ExchangeController {
                            @RequestParam(defaultValue = "1") int groupId,
                            @RequestParam String userAddress,
                            @RequestParam String exchangeContractAddress) throws Exception {
-        return exchangeService.cancel(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGiveMinUnit(),groupId,userAddress,exchangeContractAddress);
+        return exchangeService.cancel(tradeReq.getOrderHash(), tradeReq.getAmount(), tradeReq.getAssetGetMinUnit(),groupId,userAddress,exchangeContractAddress);
     }
 
     @RequestMapping("/address")
