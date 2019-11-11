@@ -1,7 +1,7 @@
 package com.webank.webase.front;
 
-import com.webank.webase.front.trade.asset.Exchange;
-import com.webank.webase.front.trade.asset.HashedTimelockBAC001;
+import com.webank.webase.front.trade.polo.Exchange;
+import com.webank.webase.front.trade.polo.HashedTimelockBAC001;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import lombok.extern.slf4j.Slf4j;

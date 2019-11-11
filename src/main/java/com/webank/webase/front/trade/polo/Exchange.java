@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.asset;
+package com.webank.webase.front.trade.polo;
 
 import io.reactivex.Flowable;
 import org.fisco.bcos.channel.client.TransactionSucCallback;

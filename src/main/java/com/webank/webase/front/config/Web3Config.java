@@ -3,8 +3,6 @@ package com.webank.webase.front.config;
 import java.util.*;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 
-import com.webank.webase.front.base.Constants;
-import com.webank.webase.front.trade.asset.HashedTimelockBAC001;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.fisco.bcos.channel.client.Service;
@@ -14,13 +12,10 @@ import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.precompile.cns.CnsService;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import static com.webank.webase.front.base.Constants.contractGasProvider;
 
 /*
  * Copyright 2012-2019 the original author or authors.
