@@ -5,11 +5,16 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "tb_exchange_order",
+        indexes = {@Index(name = "idx_status_expires", columnList = "status"),
+                @Index(name = "idx_status_expires", columnList = "expires")})
 public class ExchangeOrder {
     @Id
     private String orderHash;
