@@ -943,55 +943,55 @@ public class BAC001 extends Contract {
     }
 
     @Deprecated
-    public static BAC001 load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return new BAC001(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    public static com.webank.webase.front.trade.polo.BAC001 load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return new com.webank.webase.front.trade.polo.BAC001(contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
     @Deprecated
-    public static BAC001 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return new BAC001(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    public static com.webank.webase.front.trade.polo.BAC001 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new com.webank.webase.front.trade.polo.BAC001(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    public static BAC001 load(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return new BAC001(contractAddress, web3j, credentials, contractGasProvider);
+    public static com.webank.webase.front.trade.polo.BAC001 load(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+        return new com.webank.webase.front.trade.polo.BAC001(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static BAC001 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new BAC001(contractAddress, web3j, transactionManager, contractGasProvider);
+    public static com.webank.webase.front.trade.polo.BAC001 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        return new com.webank.webase.front.trade.polo.BAC001(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public static RemoteCall<BAC001> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
+    public static RemoteCall<com.webank.webase.front.trade.polo.BAC001> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Utf8String(description),
                 new Utf8String(shortName),
                 new Uint8(minUnit),
                 new Uint256(totalAmount)));
-        return deployRemoteCall(BAC001.class, web3j, credentials, contractGasProvider, BINARY, encodedConstructor);
+        return deployRemoteCall(com.webank.webase.front.trade.polo.BAC001.class, web3j, credentials, contractGasProvider, BINARY, encodedConstructor);
     }
 
-    public static RemoteCall<BAC001> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
+    public static RemoteCall<com.webank.webase.front.trade.polo.BAC001> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Utf8String(description),
                 new Utf8String(shortName),
                 new Uint8(minUnit),
                 new Uint256(totalAmount)));
-        return deployRemoteCall(BAC001.class, web3j, transactionManager, contractGasProvider, BINARY, encodedConstructor);
+        return deployRemoteCall(com.webank.webase.front.trade.polo.BAC001.class, web3j, transactionManager, contractGasProvider, BINARY, encodedConstructor);
     }
 
     @Deprecated
-    public static RemoteCall<BAC001> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
+    public static RemoteCall<com.webank.webase.front.trade.polo.BAC001> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Utf8String(description),
                 new Utf8String(shortName),
                 new Uint8(minUnit),
                 new Uint256(totalAmount)));
-        return deployRemoteCall(BAC001.class, web3j, credentials, gasPrice, gasLimit, BINARY, encodedConstructor);
+        return deployRemoteCall(com.webank.webase.front.trade.polo.BAC001.class, web3j, credentials, gasPrice, gasLimit, BINARY, encodedConstructor);
     }
 
     @Deprecated
-    public static RemoteCall<BAC001> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
+    public static RemoteCall<com.webank.webase.front.trade.polo.BAC001> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit, String description, String shortName, BigInteger minUnit, BigInteger totalAmount) {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Utf8String(description),
                 new Utf8String(shortName),
                 new Uint8(minUnit),
                 new Uint256(totalAmount)));
-        return deployRemoteCall(BAC001.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor);
+        return deployRemoteCall(com.webank.webase.front.trade.polo.BAC001.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor);
     }
 
     public static class SendEventResponse {
