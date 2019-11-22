@@ -21,6 +21,9 @@ public class HTLCInfo {
     private int groupId;
     private String contractAddress;
     private String exchangeContractAddress;
+
+    private String secretAddress;
+    private String tokenNetworkRegistry;
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }

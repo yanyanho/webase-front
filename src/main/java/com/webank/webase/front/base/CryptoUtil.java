@@ -94,7 +94,8 @@ public class CryptoUtil {
     public static byte[] toBytes(Object obj) {
         if (obj instanceof byte[]) {
             int length = ((byte[]) obj).length;
-            Preconditions.checkArgument(length <= 32);
+          //!!!!!!!!!!!
+           // Preconditions.checkArgument(length <= 32);
             if (length < 32) {
                 return Arrays.copyOf((byte[]) obj, 32);
             }
@@ -154,6 +155,20 @@ public class CryptoUtil {
         byte[] array = buffer.array();
         assert buffer.position() == array.length;
         return Hash.sha3(array);
+    }
+
+    public static byte[] solidityBytes(Object... data) {
+        if (data.length == 1) {
+            return toBytes(data[0]);
+        }
+        List<byte[]> arrays = Stream.of(data).map(CryptoUtil::toBytes).collect(Collectors.toList());
+        ByteBuffer buffer = ByteBuffer.allocate(arrays.stream().mapToInt(a -> a.length).sum());
+        for (byte[] a : arrays) {
+            buffer.put(a);
+        }
+        byte[] array = buffer.array();
+        assert buffer.position() == array.length;
+        return array;
     }
 
     public static byte[] soliditySha256(Object... data) {

@@ -145,7 +145,7 @@ public class AssetService {
                 minUnit = bac001.minUnit().send();
             }
             BigInteger realAmount = BigDecimal.valueOf(Math.pow(10, minUnit.doubleValue())).multiply(sendReq.getValue()).toBigInteger();
-            TransactionReceipt transactionReceipt = bac001.send(to, realAmount, data).send();
+            TransactionReceipt transactionReceipt = bac001.send(to, realAmount, data.getBytes()).send();
             dealWithReceipt(transactionReceipt);
             return true;
         } else {
