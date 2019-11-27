@@ -9,6 +9,8 @@ import com.webank.webase.front.trade.polo.BAC001;
 import com.webank.webase.front.trade.polo.Exchange;
 import com.webank.webase.front.trade.polo.TokenNetwork;
 import com.webank.webase.front.trade.polo.TokenNetworkRegistry;
+import com.webank.webase.front.trade.raiden.network.Network;
+import com.webank.webase.front.trade.raiden.network.NetworkService;
 import com.webank.webase.front.trade.raiden.req.*;
 import com.webank.webase.front.trade.raiden.translog.TransferLog;
 import com.webank.webase.front.trade.raiden.translog.TransferLogRepository;
@@ -59,6 +61,10 @@ public class RaidenService {
 
     @Autowired
     TransferLogService transferLogService;
+
+    @Autowired
+    NetworkService networkService;
+
     public static Map<Integer, String> imap = new HashMap<>();
 
    public static Credentials credentialsObserver = Credentials.create("2");
@@ -138,9 +144,9 @@ public class RaidenService {
       Sign.SignatureData sigData1 = Sign.getSignInterface().signMessage(bytes1, credentialsPartner.getEcKeyPair());
       byte[] partnerSign = signatureDataToBytes(sigData1);
 
-        TransactionReceipt transactionReceipt = tokenNetwork.setTotalWithdraw(channelIdentifier,participant,total_withdraw,  expirationBlock,participantSign, partnerSign ).send();
-        dealWithReceipt(transactionReceipt);
-        return true;
+      TransactionReceipt transactionReceipt = tokenNetwork.setTotalWithdraw(channelIdentifier,participant,total_withdraw,  expirationBlock,participantSign, partnerSign ).send();
+      dealWithReceipt(transactionReceipt);
+      return true;
     }
 
 
@@ -337,6 +343,15 @@ public class RaidenService {
         List<TokenNetworkRegistry.TokenNetworkCreatedEventResponse> responses =  tokenNetworkRegistry.getTokenNetworkCreatedEvents(t);
 
         String token_network_address = responses.get(0).token_network_address;
+
+        Network network = new Network();
+        network.setAssetAddress(assetAddress);
+        network.setTokenNetworkRegistry(tokenNetworkRegistryAddress);
+        network.setBacNetWorkAddress(token_network_address);
+        network.setGroupId(groupId);
+        network.setCreateTime(LocalDateTime.now());
+        networkService.save(network);
+
        log.info("token_network_address: " + token_network_address);
        return token_network_address;
 
