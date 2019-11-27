@@ -88,7 +88,7 @@ public class RaidenService {
     public Boolean deposit(ChannelDepositReq channelDepositReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
         TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
-       String bacAddress =   tokenNetwork.token().send();
+        String bacAddress =   tokenNetwork.token().send();
         BAC001  bac001 = getBAC001(groupId,userAddress,bacAddress);
         TransactionReceipt transactionReceipt001 = bac001.approve(tokenNetworkAddress,channelDepositReq.getTotalDeposit()).send();
         dealWithReceipt(transactionReceipt001);
@@ -202,7 +202,7 @@ public class RaidenService {
         byte[] lockroot =  new byte[32];
         BigInteger closingBalance = channelCloseReq.getClosingParticipantBalance();
         byte[] closingBalanceHash= CryptoUtil.soliditySha3(closingBalance,lockBalance,lockroot);
-        byte[] bytesBalanceClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProof.getValue() ,chain_id, closingBalanceHash, nonce , addtional_hash);
+        byte[] bytesBalanceClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProof.getValue() ,channelIdentifier, closingBalanceHash, nonce , addtional_hash);
        Sign.SignatureData sigDataBalanceClosing = Sign.getSignInterface().signMessage(bytesBalanceClosing, closingParticipantCredential.getEcKeyPair());
         byte[] participantSignBalanceClosing = signatureDataToBytes(sigDataBalanceClosing);
 
@@ -343,12 +343,14 @@ public class RaidenService {
         List<TokenNetworkRegistry.TokenNetworkCreatedEventResponse> responses =  tokenNetworkRegistry.getTokenNetworkCreatedEvents(t);
 
         String token_network_address = responses.get(0).token_network_address;
-
+        BAC001  bac001 = getBAC001(groupId,userAddress,assetAddress);
+        String shortName = bac001.shortName().send();
         Network network = new Network();
         network.setAssetAddress(assetAddress);
         network.setTokenNetworkRegistry(tokenNetworkRegistryAddress);
         network.setBacNetWorkAddress(token_network_address);
         network.setGroupId(groupId);
+        network.setAssetName(shortName);
         network.setCreateTime(LocalDateTime.now());
         networkService.save(network);
 
