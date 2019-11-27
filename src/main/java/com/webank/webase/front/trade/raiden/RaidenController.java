@@ -43,6 +43,15 @@ public class RaidenController {
         return raidenService.signMessage( message, userAddress);
     }
 
+//    @PostMapping("/sign-balance-proof")
+//    @ApiOperation(value = "open channel", httpMethod = "POST")
+//    public Map<String,String> signBalanceProof(
+//            @RequestParam String message,
+//            @RequestParam String userAddress) throws Exception {
+//
+//        return raidenService.signBalanceProof( message, userAddress);
+//    }
+
     @PostMapping("/channel-open")
     @ApiOperation(value = "open channel", httpMethod = "POST")
     public BigInteger openChannel(@RequestBody ChannelOpenReq channelOpenReq,

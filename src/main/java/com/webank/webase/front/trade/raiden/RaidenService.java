@@ -1,6 +1,5 @@
 package com.webank.webase.front.trade.raiden;
 
-
 import com.webank.webase.front.base.Constants;
 import com.webank.webase.front.base.CryptoUtil;
 import com.webank.webase.front.base.exception.FrontException;
@@ -13,6 +12,7 @@ import com.webank.webase.front.trade.polo.TokenNetworkRegistry;
 import com.webank.webase.front.trade.raiden.req.*;
 import com.webank.webase.front.trade.raiden.translog.TransferLog;
 import com.webank.webase.front.trade.raiden.translog.TransferLogRepository;
+import com.webank.webase.front.trade.raiden.translog.TransferLogService;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import com.webank.webase.front.util.DecodeOutputUtils;
@@ -56,6 +56,9 @@ public class RaidenService {
 
     @Autowired
     TransferLogRepository transferLogRepository;
+
+    @Autowired
+    TransferLogService transferLogService;
     public static Map<Integer, String> imap = new HashMap<>();
 
    public static Credentials credentialsObserver = Credentials.create("2");
@@ -168,7 +171,7 @@ public class RaidenService {
 //        BigInteger lockBalance = new BigInteger("0");
 //        byte[] lockroot =  new byte[32];
 //        byte[] balance_hash_non_closing = CryptoUtil.soliditySha3( particantNonclosingBalance,lockBalance,lockroot);
-        byte[]   balance_hash_non_closing =  Util.hexStringToBytes(channelCloseReq.getBalanceHashNonClosing());
+        byte[] balance_hash_non_closing =  Util.hexStringToBytes(channelCloseReq.getNonClosingBalanceHash());
         byte[] addtional_hash = new byte[32];
 
  //       byte[] bytesBalance2 = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProof,chain_id, balance_hash_non_closing,nonce, addtional_hash);
@@ -184,11 +187,26 @@ public class RaidenService {
      // byte[] participantSignBalance1 = Util.hexStringToBytes(channelCloseReq.getClosingSignature());
 
         TransactionReceipt t  = tokenNetwork.closeChannel(channelIdentifier ,nonClosingParticipant, closingParticipant, balance_hash_non_closing, nonce, addtional_hash ,participantSignBalance2,participantSignBalance1).send();
-       log.info("***********" + t.getStatus());
-//        log.info("******" + DecodeOutputUtils.decodeOutputReturnString0x16(t.getOutput()));
-        TokenNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(t).get(0);
-
         dealWithReceipt(t);
+       log.info("***********" + t.getStatus());
+       TokenNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(t).get(0);
+
+       // sign  the closing balance and save
+        BigInteger lockBalance = new BigInteger("0");
+        byte[] lockroot =  new byte[32];
+        BigInteger closingBalance = channelCloseReq.getClosingParticipantBalance();
+        byte[] closingBalanceHash= CryptoUtil.soliditySha3(closingBalance,lockBalance,lockroot);
+        byte[] bytesBalanceClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProof.getValue() ,chain_id, closingBalanceHash, nonce , addtional_hash);
+       Sign.SignatureData sigDataBalanceClosing = Sign.getSignInterface().signMessage(bytesBalanceClosing, closingParticipantCredential.getEcKeyPair());
+        byte[] participantSignBalanceClosing = signatureDataToBytes(sigDataBalanceClosing);
+
+      TransferLog transferLog =   transferLogService.getTransferLogLatest(tokenNetworkAddress, channelCloseReq.getChannelIdentifier());
+        log.info("***********" + transferLog.getId().toString());
+        transferLog.setClosingBalanceHash(Util.byteToHex(closingBalanceHash));
+        transferLog.setClosingSignature( Util.byteToHex(participantSignBalanceClosing));
+        transferLogRepository.save(transferLog);
+//        log.info("******" + DecodeOutputUtils.decodeOutputReturnString0x16(t.getOutput()));
+
         return true;
     }
 
@@ -206,22 +224,25 @@ public class RaidenService {
        // byte[] balance_hash_closing = CryptoUtil.soliditySha3( particantClosingBalance,lockBalance,lockroot);
         byte[] addtional_hash = new byte[32];
 
-        byte[]   balance_hash_closing =  Util.hexStringToBytes(updateBalanceProofReq.getBalanceHashClosing());
+        byte[]   balance_hash_closing =  Util.hexStringToBytes(updateBalanceProofReq.getClosingBalanceHash());
 //        byte[] bytesBalanceClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProof ,chain_id,balance_hash_closing, nonce , addtional_hash);
 //        Credentials closingParticipantCredential = keyStoreService.getCredentials(closingParticipant,false );
 //        Sign.SignatureData sigDataBalanceClosing = Sign.getSignInterface().signMessage(bytesBalanceClosing, closingParticipantCredential.getEcKeyPair());
 //        byte[] participantSignBalanceClosing = signatureDataToBytes(sigDataBalanceClosing);
-         byte[] participantSignBalanceClosing = Util.hexStringToBytes(updateBalanceProofReq.getClosingSignature());
+        byte[] participantSignBalanceClosing = Util.hexStringToBytes(updateBalanceProofReq.getClosingSignature());
 
-        byte[] bytesBalanceNonClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProofUpdate,channelIdentifier, balance_hash_closing, nonce, addtional_hash, participantSignBalanceClosing);
-        Credentials nonClosingParticipantCredential = keyStoreService.getCredentials(closingParticipant,false );
+        byte[] bytesBalanceNonClosing = CryptoUtil.solidityBytes( new Address(tokenNetworkAddress),chain_id, MessageTypeId.BalanceProofUpdate.getValue(),channelIdentifier, balance_hash_closing, nonce, addtional_hash, participantSignBalanceClosing);
+        Credentials nonClosingParticipantCredential = keyStoreService.getCredentials(nonClosingParticipant,false );
 
         Sign.SignatureData sigDataBalanceNonClosing = Sign.getSignInterface().signMessage(bytesBalanceNonClosing, nonClosingParticipantCredential.getEcKeyPair());
         byte[] participantSignBalanceNonClosing = signatureDataToBytes(sigDataBalanceNonClosing);
-    //     byte[] participantSignBalanceNonClosing = Util.hexStringToBytes(updateBalanceProofReq.getNonClosingnature());
+    //  byte[] participantSignBalanceNonClosing = Util.hexStringToBytes(updateBalanceProofReq.getNonClosingnature());
 
 
-        tokenNetwork.updateNonClosingBalanceProof(channelIdentifier,closingParticipant,nonClosingParticipant,balance_hash_closing,nonce,addtional_hash,participantSignBalanceClosing,participantSignBalanceNonClosing).send();
+        TransactionReceipt t =  tokenNetwork.updateNonClosingBalanceProof(channelIdentifier,closingParticipant,nonClosingParticipant,balance_hash_closing,nonce,addtional_hash,participantSignBalanceClosing,participantSignBalanceNonClosing).send();
+        log.info("***********" + t.getStatus());
+       dealWithReceipt(t);
+
         return true;
 
     }
@@ -239,8 +260,9 @@ public class RaidenService {
         //checkout amount ;
        // participant1TransferredAmount.add(participant2TransferredAmount).intValue() = 100;
         BigInteger participant1LockedAmount = new BigInteger("0");
-        tokenNetwork.settleChannel(channelIdentifier,participant1,participant1TransferredAmount,participant1LockedAmount, lockroot, participant2,participant2TransferredAmount,participant1LockedAmount, lockroot).send();
-        return true;
+       TransactionReceipt t = tokenNetwork.settleChannel(channelIdentifier,participant1,participant1TransferredAmount,participant1LockedAmount, lockroot, participant2,participant2TransferredAmount,participant1LockedAmount, lockroot).send();
+       dealWithReceipt(t);
+       return true;
 
     }
 
@@ -311,7 +333,9 @@ public class RaidenService {
          //settle time
         TransactionReceipt t = tokenNetworkRegistry.createERC20TokenNetwork(assetAddress,new BigInteger("1000000000000000000000000"),new BigInteger("1000000000000000000000000")).send();
 
+        dealWithReceipt(t);
         List<TokenNetworkRegistry.TokenNetworkCreatedEventResponse> responses =  tokenNetworkRegistry.getTokenNetworkCreatedEvents(t);
+
         String token_network_address = responses.get(0).token_network_address;
        log.info("token_network_address: " + token_network_address);
        return token_network_address;

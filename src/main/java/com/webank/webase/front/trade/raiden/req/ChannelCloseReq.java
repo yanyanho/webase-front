@@ -8,10 +8,11 @@ public class ChannelCloseReq {
 
   private BigInteger channelIdentifier;
   private String closingParticipant;
+  private BigInteger closingParticipantBalance;
   private String nonClosingParticipant;
   private BigInteger nonClosingParticipantBalance;
   private BigInteger nonce;
-  private String balanceHashNonClosing;
+  private String nonClosingBalanceHash;
   private String nonClosingSignature;
   //private String closingSignature;
 
