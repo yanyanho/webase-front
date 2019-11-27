@@ -28,6 +28,9 @@ public class TransferLog {
     private BigInteger participant2Balance;
     private Boolean status;
 
+    private String closingBalanceHash;
+    private String closingSignature;
+
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

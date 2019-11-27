@@ -49,7 +49,7 @@ public class HTLCDeploy  implements ApplicationRunner {
                SecretRegistry secretRegistry = SecretRegistry.deploy(value, credentials, contractGasProvider).send();
                String secretAddress = secretRegistry.getContractAddress();
                //TokenNetworkRegistry
-               TokenNetworkRegistry tokenNetworkRegistry = TokenNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("1"),new BigInteger("100000000"),new BigInteger("10")).send();
+               TokenNetworkRegistry tokenNetworkRegistry = TokenNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("1"),new BigInteger("100000000"),new BigInteger("10000")).send();
 
                 HTLCInfo htlcInfo = new HTLCInfo();
                 htlcInfo.setGroupId(key);

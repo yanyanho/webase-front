@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
+import java.util.List;
 
 @Service
     public class TransferLogService {
@@ -37,6 +38,24 @@ import java.math.BigInteger;
                   return  criteriaBuilder.and(predicate1,predicate2);
                   },  pageable);
         return ordersPage;
+
+    }
+
+
+    public TransferLog getTransferLogLatest(String bacNetworkAddress, BigInteger channelIdentifier) {
+
+        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        List<TransferLog> ordersList = transferLogRepository.findAll(
+                (Root<TransferLog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            //        Predicate predicate = FrontUtils.buildPredicate(root, criteriaBuilder, status);
+//                    query.where(predicate);
+//                    return query.getRestriction();
+                    //添加断言
+                  Predicate predicate1 = criteriaBuilder.equal(root.get("channelIdentifier").as(BigInteger.class),channelIdentifier);
+                  Predicate predicate2=    criteriaBuilder.equal(root.get("bacNetworkAddress").as(String.class), bacNetworkAddress);                                    ;
+                  return  criteriaBuilder.and(predicate1,predicate2);
+                  },sort);
+        return ordersList.get(0);
 
     }
 

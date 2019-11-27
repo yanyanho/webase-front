@@ -229,16 +229,49 @@
     "body": {
       "channelIdentifier":1,
       "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "closingParticipantBalance":100,
       "nonClosingParticipant":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
       "nonClosingParticipantBalance":20,
       "nonce":4,
-      "balanceHashNonClosing":"2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
+      "nonClosingBalanceHash":"2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
       "nonClosingSignature":"56C341734BF492EC77DB7D80C0F0E77D61422B680A940B3F4A33FBB37591A6535F032249BF8F90E4A8FC689F6DAE0FCD31156FC1B31552CE280E0B1C2A93A9091C"
     },
     "response": {
       true;
     }
-  }
+  },
 
-]
+  //更新对方余额
+  {
+    "request": "http://localhost:5002/raiden/update-balacne-proof?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "channelIdentifier":1,
+      "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "nonClosingParticipant":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "closingParticipantBalance":20,
+      "closingParticipantNonce":4,
+      "balanceHashClosing":"2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
+      "closingSignature":"56C341734BF492EC77DB7D80C0F0E77D61422B680A940B3F4A33FBB37591A6535F032249BF8F90E4A8FC689F6DAE0FCD31156FC1B31552CE280E0B1C2A93A9091C"
+    },
+    "response": {
+      true;
+    }
+  },
+  //通道结算
+  {
+    "request": "http://localhost:5002/raiden/settle?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "channelIdentifier":1,
+      "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "participant1TransferredAmount":180,
+      "participant1LockedAmount":0,
+      "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "participant2TransferredAmount":20,
+      "participant2LockedAmount":0,
+    },
+    "response": {
+      true;
+    }
+  }
+  ]
 

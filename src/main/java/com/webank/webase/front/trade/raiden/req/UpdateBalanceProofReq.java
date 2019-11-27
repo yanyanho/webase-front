@@ -11,9 +11,9 @@ public class UpdateBalanceProofReq {
   private BigInteger channelIdentifier;
   private String closingParticipant;
   private String nonClosingParticipant;
-  private   BigInteger closingParticipantBalance;;
+  private BigInteger closingParticipantBalance;;
   private BigInteger closingParticipantNonce;
-  private String balanceHashClosing;
+  private String closingBalanceHash;
   private String closingSignature;
   private String nonClosingnature;
 }
