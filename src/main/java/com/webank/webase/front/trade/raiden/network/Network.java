@@ -18,6 +18,7 @@ public class Network {
     private Long id;
     private int groupId;
     private String assetAddress;
+    private String assetName;
     private String bacNetWorkAddress;
     private String tokenNetworkRegistry;
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
