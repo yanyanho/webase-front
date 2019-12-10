@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.raiden.translog;
+package com.webank.webase.front.trade.txspeed.translog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.raiden.network;
+package com.webank.webase.front.trade.txspeed.network;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

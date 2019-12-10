@@ -1,7 +1,5 @@
-package com.webank.webase.front.trade.raiden.network;
+package com.webank.webase.front.trade.txspeed.network;
 
-import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
-import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

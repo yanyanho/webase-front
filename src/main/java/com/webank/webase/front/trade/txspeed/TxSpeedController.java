@@ -1,8 +1,8 @@
-package com.webank.webase.front.trade.raiden;
+package com.webank.webase.front.trade.txspeed;
 
-import com.webank.webase.front.trade.raiden.req.*;
-import com.webank.webase.front.trade.raiden.translog.TransferLog;
-import com.webank.webase.front.trade.raiden.translog.TransferLogService;
+import com.webank.webase.front.trade.txspeed.req.*;
+import com.webank.webase.front.trade.txspeed.translog.TransferLog;
+import com.webank.webase.front.trade.txspeed.translog.TransferLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/raiden")
+@RequestMapping("/tx-speed")
 @Api(value = "ExchangeController", tags = "Account Infomation Query")
-public class RaidenController {
+public class TxSpeedController {
 
     @Autowired
-    RaidenService raidenService;
+    TxSpeedService txSpeedService;
     @Autowired
     TransferLogService transferLogService;
 
@@ -31,7 +31,7 @@ public class RaidenController {
                                   @RequestParam String userAddress,
                                   @RequestParam String assetAddress) throws Exception {
 
-        return raidenService.createBACNetwork(groupId, userAddress,assetAddress);
+        return txSpeedService.createBACNetwork(groupId, userAddress,assetAddress);
     }
 
     @PostMapping("/sign")
@@ -40,7 +40,7 @@ public class RaidenController {
             @RequestParam String message,
             @RequestParam String userAddress) throws Exception {
 
-        return raidenService.signMessage( message, userAddress);
+        return txSpeedService.signMessage( message, userAddress);
     }
 
 //    @PostMapping("/sign-balance-proof")
@@ -49,7 +49,7 @@ public class RaidenController {
 //            @RequestParam String message,
 //            @RequestParam String userAddress) throws Exception {
 //
-//        return raidenService.signBalanceProof( message, userAddress);
+//        return txSpeedService.signBalanceProof( message, userAddress);
 //    }
 
     @PostMapping("/channel-open")
@@ -59,7 +59,7 @@ public class RaidenController {
                                   @RequestParam String userAddress,
                                   @RequestParam String bacNetworkAddress) throws Exception {
 
-        return raidenService.openChannel(channelOpenReq, groupId, userAddress,bacNetworkAddress);
+        return txSpeedService.openChannel(channelOpenReq, groupId, userAddress,bacNetworkAddress);
     }
 
 
@@ -70,7 +70,7 @@ public class RaidenController {
                            @RequestParam String userAddress,
                            @RequestParam String bacNetworkAddress) throws Exception {
 
-        return raidenService.deposit(depositReq,groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.deposit(depositReq,groupId,userAddress,bacNetworkAddress);
     }
 
     @GetMapping("/participant-info")
@@ -82,7 +82,7 @@ public class RaidenController {
                            @RequestParam String userAddress,
                            @RequestParam String bacNetworkAddress) throws Exception {
 
-        return raidenService.getChannelParticipantInfo(partnerAdress,channelIdentifier, groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.getChannelParticipantInfo(partnerAdress,channelIdentifier, groupId,userAddress,bacNetworkAddress);
     }
 
 
@@ -93,7 +93,7 @@ public class RaidenController {
                             @RequestParam String userAddress,
                             @RequestParam String bacNetworkAddress) throws Exception {
 
-        return raidenService.withdraw(channelWithdrawReq,groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.withdraw(channelWithdrawReq,groupId,userAddress,bacNetworkAddress);
     }
 // transfer off-chain!!!!!!!!!
     @PostMapping("/transfer")
@@ -102,13 +102,13 @@ public class RaidenController {
                           @RequestParam(defaultValue = "1") int groupId,
                           @RequestParam String userAddress,
                           @RequestParam String bacNetworkAddress) throws Exception {
-        return raidenService.transfer(tranferLog,userAddress,bacNetworkAddress);
+        return txSpeedService.transfer(tranferLog,userAddress,bacNetworkAddress);
     }
 
     @PostMapping("/transfer/cancel")
     @ApiOperation(value = "transfer", httpMethod = "POST")
     public Boolean confirm (@RequestBody tranferLogIdReq tranferLogIdReq) throws Exception {
-        return raidenService.confirm(tranferLogIdReq.getTranferLogId());
+        return txSpeedService.confirm(tranferLogIdReq.getTranferLogId());
     }
 
     @PostMapping("/channel-close")
@@ -117,7 +117,7 @@ public class RaidenController {
                                   @RequestParam(defaultValue = "1") int groupId,
                                   @RequestParam String userAddress,
                                   @RequestParam String bacNetworkAddress) throws Exception {
-        return raidenService.closeChannel(channelCloseReq,groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.closeChannel(channelCloseReq,groupId,userAddress,bacNetworkAddress);
     }
 
     @PostMapping("/update-balacne-proof")
@@ -126,7 +126,7 @@ public class RaidenController {
                                                   @RequestParam(defaultValue = "1") int groupId,
                                                   @RequestParam String userAddress,
                                                   @RequestParam String bacNetworkAddress) throws Exception {
-        return raidenService.updateNonClosingBalanceProof(updateBalanceProofReq,groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.updateNonClosingBalanceProof(updateBalanceProofReq,groupId,userAddress,bacNetworkAddress);
     }
 
     @PostMapping("/settle")
@@ -135,7 +135,7 @@ public class RaidenController {
                                     @RequestParam(defaultValue = "1") int groupId,
                                     @RequestParam String userAddress,
                                     @RequestParam String bacNetworkAddress) throws Exception {
-        return raidenService.settle(channelSettleReq,groupId,userAddress,bacNetworkAddress);
+        return txSpeedService.settle(channelSettleReq,groupId,userAddress,bacNetworkAddress);
     }
 
     @GetMapping("/transfer-log")
@@ -154,7 +154,7 @@ public class RaidenController {
                                                   @RequestParam BigInteger channelIdentifier,
                                                   @RequestParam(defaultValue = "1") int groupId,
                                                   @RequestParam String bacNetworkAddress) throws Exception {
-        return raidenService.getChannelInfo(participant1,participant2,channelIdentifier,bacNetworkAddress,groupId );
+        return txSpeedService.getChannelInfo(participant1,participant2,channelIdentifier,bacNetworkAddress,groupId );
     }
 
 
