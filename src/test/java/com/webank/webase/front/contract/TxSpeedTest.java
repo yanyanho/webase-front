@@ -2,10 +2,10 @@ package com.webank.webase.front.contract;
 
 import com.webank.webase.front.Application;
 import com.webank.webase.front.base.CryptoUtil;
+import com.webank.webase.front.trade.polo.AssetNetwork;
+import com.webank.webase.front.trade.polo.AssetNetworkRegistry;
 import com.webank.webase.front.trade.polo.BAC001;
 import com.webank.webase.front.trade.polo.SecretRegistry;
-import com.webank.webase.front.trade.polo.TokenNetwork;
-import com.webank.webase.front.trade.polo.TokenNetworkRegistry;
 import com.webank.webase.front.util.DecodeOutputUtils;
 import org.fisco.bcos.channel.client.Service;
 
@@ -13,7 +13,6 @@ import org.fisco.bcos.web3j.abi.datatypes.Address;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.crypto.Hash;
 import org.fisco.bcos.web3j.crypto.Sign;
-import org.fisco.bcos.web3j.crypto.gm.sm3.Util;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -29,17 +28,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigInteger;
 import java.security.SignatureException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.fisco.bcos.web3j.crypto.Keys.getAddress;
 import static org.fisco.bcos.web3j.crypto.Sign.signedMessageToKey;
-import static org.fisco.bcos.web3j.utils.Numeric.hexStringToByteArray;
 
 
 @RunWith(SpringRunner.class)
@@ -82,22 +78,22 @@ public class TxSpeedTest {
         System.out.println("token contract address: " + tokenAddress);
         //TokenNetworkRegistry
                                                                                                                          //address _token_address, address _secret_registry, uint256 _chain_id, uint256 _settlement_timeout_min, uint256 _settlement_timeout_max, address _deprecation_executor, uint256 _channel_participant_deposit_limit, uint256 _token_network_deposit_limit
-        TokenNetworkRegistry tokenNetworkRegistry = TokenNetworkRegistry.deploy(web3j, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("100000")).send();
+        AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.deploy(web3j, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("100000")).send();
 
 
                                                                      //address _token_address, address _secret_registry, uint256 _chain_id, uint256 _settlement_timeout_min, uint256 _settlement_timeout_max, address _deprecation_executor, uint256 _channel_participant_deposit_limit, uint256 _token_network_deposit_limit
-        TransactionReceipt t = tokenNetworkRegistry.createERC20TokenNetwork(tokenAddress,new BigInteger("1000000000000000000000000"),new BigInteger("1000000000000000000000000")).send();
+        TransactionReceipt t = tokenNetworkRegistry.createBAC001AssetNetwork(tokenAddress,new BigInteger("1000000000000000000000000"),new BigInteger("1000000000000000000000000")).send();
 
-        List<TokenNetworkRegistry.TokenNetworkCreatedEventResponse>  responses =  tokenNetworkRegistry.getTokenNetworkCreatedEvents(t);
-        String token_network_address = responses.get(0).token_network_address;
+        List<AssetNetworkRegistry.AssetNetworkCreatedEventResponse>  responses =  tokenNetworkRegistry.getAssetNetworkCreatedEvents(t);
+        String token_network_address = responses.get(0).asset_network_address;
         System.out.println("token_network_address: " + token_network_address);
         //load token network
-        TokenNetwork tokenNetwork = TokenNetwork.load(token_network_address, web3j, credentials, contractGasProvider);
+        AssetNetwork tokenNetwork = AssetNetwork.load(token_network_address, web3j, credentials, contractGasProvider);
 
         // open channel   settle timeout!!!
        TransactionReceipt t1 = tokenNetwork.openChannel(Owner,Bob,new BigInteger("60000")).send();
        dealWithReceipt(t1);
-        TokenNetwork.ChannelOpenedEventResponse response1 = tokenNetwork.getChannelOpenedEvents(t1).get(0);
+        AssetNetwork.ChannelOpenedEventResponse response1 = tokenNetwork.getChannelOpenedEvents(t1).get(0);
         System.out.println("channel_identifier: " +response1.channel_identifier +
                 " participant1: "+ response1.participant1 +
                " participant2: "+ response1.participant2+
@@ -113,7 +109,7 @@ public class TxSpeedTest {
 
         System.out.println("t2:"+ t2.getStatus() +"  Bob balance: " + abcToken.balance(Bob).send() );
         System.out.println("Owner balance: " + abcToken.balance(Owner).send() );
-        TokenNetwork tokenNetworkBob =  TokenNetwork.load(token_network_address, web3j, credentialsBob, contractGasProvider);
+        AssetNetwork tokenNetworkBob =  AssetNetwork.load(token_network_address, web3j, credentialsBob, contractGasProvider);
 
         BAC001 abcTokenBob = BAC001.load(tokenAddress,web3j, credentialsBob, contractGasProvider);
 
@@ -123,7 +119,7 @@ public class TxSpeedTest {
         // Bob deposit 1000
         TransactionReceipt tt = tokenNetworkBob.setTotalDeposit(new BigInteger("1"),Bob,new BigInteger("1000"),Owner).send();
 
-        TokenNetwork.ChannelNewDepositEventResponse response2 = tokenNetwork.getChannelNewDepositEvents(tt).get(0);
+        AssetNetwork.ChannelNewDepositEventResponse response2 = tokenNetwork.getChannelNewDepositEvents(tt).get(0);
         System.out.println("channel_identifier: " +response2.channel_identifier +
                 " participant: "+ response2.participant +
                 " total_deposit: "+ response2.total_deposit);
@@ -197,7 +193,7 @@ public class TxSpeedTest {
 //        System.out.println(ttt);
 
         TransactionReceipt ttt1=    tokenNetwork.closeChannel(channel_identifier,Bob,Owner,balance_hash_bob,nonce, addtional_hash ,participantSignBalance2,participantSignBalance1).send();
-        TokenNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(ttt1).get(0);
+        AssetNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(ttt1).get(0);
         System.out.println("nonce:" +closeEvent.nonce +" close: "+closeEvent.closing_participant);
 
 

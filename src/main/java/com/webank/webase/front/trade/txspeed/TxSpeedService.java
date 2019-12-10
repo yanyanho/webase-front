@@ -5,10 +5,10 @@ import com.webank.webase.front.base.CryptoUtil;
 import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.keystore.KeyStoreService;
 import com.webank.webase.front.trade.exchange.Order.OrderService;
+import com.webank.webase.front.trade.polo.AssetNetwork;
+import com.webank.webase.front.trade.polo.AssetNetworkRegistry;
 import com.webank.webase.front.trade.polo.BAC001;
 import com.webank.webase.front.trade.polo.Exchange;
-import com.webank.webase.front.trade.polo.TokenNetwork;
-import com.webank.webase.front.trade.polo.TokenNetworkRegistry;
 import com.webank.webase.front.trade.txspeed.network.Network;
 import com.webank.webase.front.trade.txspeed.network.NetworkService;
 import com.webank.webase.front.trade.txspeed.req.*;
@@ -53,8 +53,6 @@ public class TxSpeedService {
     @Autowired
     HTLCInfoService htlcInfoService;
 
-    @Autowired
-    OrderService orderService;
 
     @Autowired
     TransferLogRepository transferLogRepository;
@@ -74,12 +72,12 @@ public class TxSpeedService {
 
     public BigInteger openChannel(ChannelOpenReq channelOpenReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
 
         TransactionReceipt transactionReceipt = tokenNetwork.openChannel(channelOpenReq.getParticipant1(), channelOpenReq.getParticipant2(),channelOpenReq.getSettleTimeout()).send();
 
         dealWithReceipt(transactionReceipt);
-        TokenNetwork.ChannelOpenedEventResponse response1 = tokenNetwork.getChannelOpenedEvents(transactionReceipt).get(0);
+        AssetNetwork.ChannelOpenedEventResponse response1 = tokenNetwork.getChannelOpenedEvents(transactionReceipt).get(0);
         return response1.channel_identifier;
 
     }
@@ -87,8 +85,8 @@ public class TxSpeedService {
 
     public Boolean deposit(ChannelDepositReq channelDepositReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
-        String bacAddress =   tokenNetwork.token().send();
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
+        String bacAddress =   tokenNetwork.asset().send();
         BAC001  bac001 = getBAC001(groupId,userAddress,bacAddress);
         TransactionReceipt transactionReceipt001 = bac001.approve(tokenNetworkAddress,channelDepositReq.getTotalDeposit()).send();
         dealWithReceipt(transactionReceipt001);
@@ -103,7 +101,7 @@ public class TxSpeedService {
 
     public Map<String, Object> getChannelParticipantInfo(String partnerAdress,BigInteger channelIdentifier, int groupId, String userAddress, String bacNetworkAddress) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, bacNetworkAddress);
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, userAddress, bacNetworkAddress);
         Tuple7<BigInteger, BigInteger, Boolean, byte[], BigInteger, byte[], BigInteger> tuple7 =
                 tokenNetwork.getChannelParticipantInfo(channelIdentifier,userAddress,partnerAdress ).send();
 
@@ -123,7 +121,7 @@ public class TxSpeedService {
 
   public Boolean withdraw(ChannelWithdrawReq channelWithdrawReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
-      TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
+      AssetNetwork assetNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
 
 
       BigInteger total_withdraw = channelWithdrawReq.getTotalWithdraw();
@@ -144,7 +142,7 @@ public class TxSpeedService {
       Sign.SignatureData sigData1 = Sign.getSignInterface().signMessage(bytes1, credentialsPartner.getEcKeyPair());
       byte[] partnerSign = signatureDataToBytes(sigData1);
 
-      TransactionReceipt transactionReceipt = tokenNetwork.setTotalWithdraw(channelIdentifier,participant,total_withdraw,  expirationBlock,participantSign, partnerSign ).send();
+      TransactionReceipt transactionReceipt = assetNetwork.setTotalWithdraw(channelIdentifier,participant,total_withdraw,  expirationBlock,participantSign, partnerSign ).send();
       dealWithReceipt(transactionReceipt);
       return true;
     }
@@ -164,7 +162,7 @@ public class TxSpeedService {
     // 90------210                      nonce+1,各自签名自己的余额。balance_hash
     public Boolean closeChannel(ChannelCloseReq channelCloseReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
         BigInteger nonce = channelCloseReq.getNonce();
         BigInteger channelIdentifier =   channelCloseReq.getChannelIdentifier();
 
@@ -195,7 +193,7 @@ public class TxSpeedService {
         TransactionReceipt t  = tokenNetwork.closeChannel(channelIdentifier ,nonClosingParticipant, closingParticipant, balance_hash_non_closing, nonce, addtional_hash ,participantSignBalance2,participantSignBalance1).send();
         dealWithReceipt(t);
        log.info("***********" + t.getStatus());
-       TokenNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(t).get(0);
+       AssetNetwork.ChannelClosedEventResponse  closeEvent = tokenNetwork.getChannelClosedEvents(t).get(0);
 
        // sign  the closing balance and save
         BigInteger lockBalance = new BigInteger("0");
@@ -217,7 +215,7 @@ public class TxSpeedService {
     }
 
     public Boolean updateNonClosingBalanceProof(UpdateBalanceProofReq updateBalanceProofReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
         BigInteger nonce = updateBalanceProofReq.getClosingParticipantNonce();
         BigInteger channelIdentifier =   updateBalanceProofReq.getChannelIdentifier();
 
@@ -256,7 +254,7 @@ public class TxSpeedService {
 
     public Boolean settle(ChannelSettleReq channelSettleReq, int groupId, String userAddress, String tokenNetworkAddress) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, userAddress, tokenNetworkAddress);
+        AssetNetwork assetNetwork =  getAssetNetwork(groupId, userAddress, tokenNetworkAddress);
         BigInteger channelIdentifier = channelSettleReq.getChannelIdentifier();
         String participant1 = channelSettleReq.getParticipant1();
         String participant2 =   channelSettleReq.getParticipant2();
@@ -266,7 +264,7 @@ public class TxSpeedService {
         //checkout amount ;
        // participant1TransferredAmount.add(participant2TransferredAmount).intValue() = 100;
         BigInteger participant1LockedAmount = new BigInteger("0");
-       TransactionReceipt t = tokenNetwork.settleChannel(channelIdentifier,participant1,participant1TransferredAmount,participant1LockedAmount, lockroot, participant2,participant2TransferredAmount,participant1LockedAmount, lockroot).send();
+       TransactionReceipt t = assetNetwork.settleChannel(channelIdentifier,participant1,participant1TransferredAmount,participant1LockedAmount, lockroot, participant2,participant2TransferredAmount,participant1LockedAmount, lockroot).send();
        dealWithReceipt(t);
        return true;
 
@@ -297,7 +295,7 @@ public class TxSpeedService {
         return BAC001.load(assetAddress, web3j, credentials, Constants.contractGasProvider);
     }
 
-    private TokenNetwork getTokenNetwork(int groupId, String userAddress, String assetAddress) {
+    private AssetNetwork getAssetNetwork(int groupId, String userAddress, String assetAddress) {
         Web3j web3j = web3jMap.get(groupId);
         Credentials credentials;
         if(userAddress.equals(credentialsObserver.getAddress())) {
@@ -306,7 +304,7 @@ public class TxSpeedService {
             credentials  = keyStoreService.getCredentials(userAddress,false );
         }
 
-        return TokenNetwork.load(assetAddress, web3j, credentials, Constants.contractGasProvider);
+        return AssetNetwork.load(assetAddress, web3j, credentials, Constants.contractGasProvider);
     }
 
 
@@ -334,15 +332,15 @@ public class TxSpeedService {
 
        HTLCInfo htlcInfo =  htlcInfoService.findByGroupId(groupId);
        String tokenNetworkRegistryAddress =  htlcInfo.getTokenNetworkRegistry();
-         TokenNetworkRegistry tokenNetworkRegistry = TokenNetworkRegistry.load(tokenNetworkRegistryAddress,web3j, credentials, contractGasProvider);
+         AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.load(tokenNetworkRegistryAddress,web3j, credentials, contractGasProvider);
 
          //settle time
-        TransactionReceipt t = tokenNetworkRegistry.createERC20TokenNetwork(assetAddress,new BigInteger("1000000000000000000000000"),new BigInteger("1000000000000000000000000")).send();
+        TransactionReceipt t = tokenNetworkRegistry.createBAC001AssetNetwork(assetAddress,new BigInteger("1000000000000000000000000"),new BigInteger("1000000000000000000000000")).send();
 
         dealWithReceipt(t);
-        List<TokenNetworkRegistry.TokenNetworkCreatedEventResponse> responses =  tokenNetworkRegistry.getTokenNetworkCreatedEvents(t);
+        List<AssetNetworkRegistry.AssetNetworkCreatedEventResponse> responses =  tokenNetworkRegistry.getAssetNetworkCreatedEvents(t);
 
-        String token_network_address = responses.get(0).token_network_address;
+        String token_network_address = responses.get(0).asset_network_address;
         BAC001  bac001 = getBAC001(groupId,userAddress,assetAddress);
         String shortName = bac001.shortName().send();
         Network network = new Network();
@@ -404,7 +402,7 @@ public class TxSpeedService {
 
     public Map<String, Object> getChannelInfo(String participant1, String participant2, BigInteger channelIdentifier, String bacNetworkAddress, int groupId) throws Exception {
 
-        TokenNetwork tokenNetwork =  getTokenNetwork(groupId, credentialsObserver.getAddress(), bacNetworkAddress);
+        AssetNetwork tokenNetwork =  getAssetNetwork(groupId, credentialsObserver.getAddress(), bacNetworkAddress);
         Tuple2<BigInteger, BigInteger> tuple2 =
                 tokenNetwork.getChannelInfo(channelIdentifier,participant1,participant2 ).send();
 
