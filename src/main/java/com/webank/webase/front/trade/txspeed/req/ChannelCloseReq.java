@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.raiden.req;
+package com.webank.webase.front.trade.txspeed.req;
 
 import lombok.Data;
 import java.math.BigInteger;

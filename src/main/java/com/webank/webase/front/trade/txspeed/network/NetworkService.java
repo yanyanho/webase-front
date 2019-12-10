@@ -1,16 +1,8 @@
-package com.webank.webase.front.trade.raiden.network;
+package com.webank.webase.front.trade.txspeed.network;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

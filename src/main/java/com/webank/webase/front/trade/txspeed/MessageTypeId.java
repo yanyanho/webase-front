@@ -1,4 +1,4 @@
-package com.webank.webase.front.trade.raiden;
+package com.webank.webase.front.trade.txspeed;
 
 public enum MessageTypeId {
 
