@@ -1,20 +1,18 @@
 [
-
 //创建资产通道网络
   {
-    "request": "http://localhost:5002/raiden/create-bac-network?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&assetAddress=0x8511decf9cec26d38db522fe6b3080a747c7566e",
+    "request": "http://localhost:5002/tx-speed/create-bac-network?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&assetAddress=0x8511decf9cec26d38db522fe6b3080a747c7566e",
     "response": {
       "0xd5ad61903897cc23d0f2bde27878535fa226ee2d"
     }
   },
   //开启通道
   {
-    "request": "http://localhost:5002/raiden/channel-open?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/channel-open?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
-
     "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
     "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
-    "settleTimeout":10
+    "settleTimeout":3600000
     },
     "response": {
       1  // 通道编号
@@ -24,7 +22,7 @@
 
   {
     // 存钱
-    "request": "http://localhost:5002/raiden/deposit?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/deposit?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
       "participant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
       "partner":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
@@ -37,7 +35,7 @@
   },
   {
     // 链下转账
-    "request": "http://localhost:5002/raiden/transfer?userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/transfer?userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
       "bacNetworkAddress":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
       "channelIdentifier":1,
@@ -71,7 +69,7 @@
   },
   {
     // 链下转账取消
-    "request": "http://localhost:5002/raiden/transfer/cancel",
+    "request": "http://localhost:5002/tx-speed/transfer/cancel",
     "body": {
       "tranferLogId":65
     },
@@ -82,7 +80,7 @@
 
   {
     // 查询通道详情
-    "request": "http://localhost:5002/raiden/participant-info?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&partnerAdress=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
+    "request": "http://localhost:5002/tx-speed/participant-info?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&partnerAdress=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
 
     "response": {
     "lockedAmount": 0,
@@ -97,7 +95,7 @@
   } ,
   {
     // 查询通道状态
-    "request": "http://localhost:5002/raiden/channel-state?groupId=1&participant2=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&participant1=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
+    "request": "http://localhost:5002/tx-speed/channel-state?groupId=1&participant2=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&participant1=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
 
     "response": {
 //结算超时时间
@@ -114,7 +112,7 @@
   },
   {
     // 查询通道状态
-    "request": "http://localhost:5002/raiden/transfer-log?bacNetworkAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&channelIdentifier=1",
+    "request": "http://localhost:5002/tx-speed/transfer-log?bacNetworkAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&channelIdentifier=1",
     "response": {
       "content": [
         {
@@ -225,7 +223,7 @@
 
   //通道关闭
   {
-    "request": "http://localhost:5002/raiden/channel-close?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/channel-close?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
       "channelIdentifier":1,
       "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
@@ -243,7 +241,7 @@
 
   //更新对方余额
   {
-    "request": "http://localhost:5002/raiden/update-balacne-proof?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/update-balacne-proof?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
       "channelIdentifier":1,
       "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
@@ -259,7 +257,7 @@
   },
   //通道结算
   {
-    "request": "http://localhost:5002/raiden/settle?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "request": "http://localhost:5002/tx-speed/settle?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
     "body": {
       "channelIdentifier":1,
       "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
@@ -267,7 +265,7 @@
       "participant1LockedAmount":0,
       "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
       "participant2TransferredAmount":20,
-      "participant2LockedAmount":0,
+      "participant2LockedAmount":0
     },
     "response": {
       true;
