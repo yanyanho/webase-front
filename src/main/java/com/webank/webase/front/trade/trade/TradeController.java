@@ -5,7 +5,6 @@ import com.webank.webase.front.trade.request.RefundReq;
 import com.webank.webase.front.trade.request.WithDrawReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.fisco.bcos.web3j.tuples.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,17 +23,17 @@ public class TradeController {
     @RequestMapping("/new-contract-initiator")
     @ApiOperation(value = "new contract", httpMethod = "POST")
     public String createNewCrossContract(@RequestBody ContractReq contractReq,
-                                         @RequestParam(defaultValue = "1") int groupId,
+                                          @RequestParam(defaultValue = "1") int groupId,
                                           @RequestParam String userAddress,
                                           @RequestParam String htlcContractAddress) throws Exception {
 
-        return tradeService.newContract(contractReq,groupId,userAddress,htlcContractAddress);
+        return tradeService.newContractForInitiator(contractReq,groupId,userAddress,htlcContractAddress);
     }
 
     @RequestMapping("/new-contract-receiver")
     @ApiOperation(value = "new contract", httpMethod = "POST")
     public String createNewCrossContractForReceive(@RequestBody ContractReq contractReq,
-                                         @RequestParam(defaultValue = "1") int groupId,
+                                          @RequestParam(defaultValue = "1") int groupId,
                                           @RequestParam String userAddress,
                                           @RequestParam String htlcContractAddress) throws Exception {
 
@@ -44,9 +43,9 @@ public class TradeController {
     @RequestMapping("/withdraw")
     @ApiOperation(value = "withdraw", httpMethod = "POST")
     public String withdrawFund (@RequestBody WithDrawReq withDrawReq,
-                                @RequestParam(defaultValue = "1") int groupId,
-                                @RequestParam String userAddress,
-                                @RequestParam String htlcContractAddress) throws Exception {
+                                 @RequestParam(defaultValue = "1") int groupId,
+                                 @RequestParam String userAddress,
+                                 @RequestParam String htlcContractAddress) throws Exception {
 
         return tradeService.withdraw(withDrawReq,groupId,userAddress,htlcContractAddress);
     }
@@ -75,7 +74,7 @@ public class TradeController {
 
     @RequestMapping("/htlc")
     @ApiOperation(value = "htlc", httpMethod = "GET")
-    public Map getHTLCAddress() throws Exception {
+    public Map getHTLCAddress()   {
 
         return tradeService.getHTLCAddress();
     }

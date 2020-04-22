@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     database: H2
     openInView: false
-    show_sql: false
+    show_sql: true
     generate-ddl: true
     hibernate:
       ddl-auto: update
@@ -31,7 +31,7 @@ spring:
 
 server:
   port: 5002
-  context-path: /WeBASE-Front
+  context-path: /
 
 sdk:
   orgName: orgTest
@@ -41,7 +41,7 @@ sdk:
   timeout: 10000
   keepAlive: 60
   ip: 10.107.105.18
-  channelPort: 20800
+  channelPort: 20200
 
 logging:
   config: classpath:log4j2.xml
@@ -51,4 +51,5 @@ constant:
   transMaxWait: 30
   monitorDisk: /
   aesKey: EfdsW23D23d3df43
+  checkOrderStatusTaskDelay: 1800000   #任务执行完后，隔多久开始下一个任务（毫秒）
 

@@ -7,8 +7,10 @@ import com.webank.webase.front.keystore.KeyStoreService;
 import com.webank.webase.front.trade.request.ContractReq;
 import com.webank.webase.front.trade.request.RefundReq;
 import com.webank.webase.front.trade.request.WithDrawReq;
-import com.webank.webase.front.trade.asset.BAC001;
-import com.webank.webase.front.trade.asset.HashedTimelockBAC001;
+import com.webank.webase.front.trade.polo.BAC001;
+import com.webank.webase.front.trade.polo.HashedTimelockBAC001;
+import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
+import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import com.webank.webase.front.util.DecodeOutputUtils;
 import com.webank.webase.front.util.Tools;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +19,14 @@ import org.fisco.bcos.web3j.crypto.Hash;
 import org.fisco.bcos.web3j.crypto.gm.sm3.Util;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.fisco.bcos.web3j.tuples.Tuple;
 import org.fisco.bcos.web3j.tuples.generated.Tuple9;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.fisco.bcos.web3j.crypto.gm.sm3.Util.encodeHexString;
@@ -40,20 +43,24 @@ public class TradeService {
     KeyStoreService keyStoreService;
 
     @Autowired
-    private  Map<Integer, String> htlcMap;
+    HTLCInfoService htlcInfoService;
 
-    public String newContract(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
+    public static Map<Integer, String> imap = new HashMap<>();
+
+
+    public String newContractForInitiator(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
 
         BAC001 bac001 =  getBAC001(groupId,userAddress, contractReq.getAssetContractAddress());
-        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,new BigInteger("100000")).send();
+        BigInteger minUnit = bac001.minUnit().send();
+        BigInteger value =   contractReq.getAmount().multiply(BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue()))).toBigInteger();
 
+        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,value).send();
         dealWithReceipt(transactionReceipt001);
-
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
         byte[] hash ;
-             hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+        hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
 
-        TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), contractReq.getAmount()).send();
+        TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), value).send();
 
         dealWithReceipt(transactionReceipt);
         return transactionReceipt.getOutput();
@@ -62,18 +69,27 @@ public class TradeService {
 
     public String newContractForReceiver(ContractReq contractReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
 
-        chekoutCounterpartyDeposit(contractReq.getInitiatorInfo().getInitiatorValue(),contractReq.getInitiatorInfo().getInitiatorContractId(), contractReq.getInitiatorInfo().getInitiatorGroupId(),userAddress,contractReq.getInitiatorInfo().getInitiatorHtlcContractAddress());
+        BAC001 bac001 =  getBAC001(groupId, userAddress, contractReq.getAssetContractAddress());
+        BigInteger minUnit = bac001.minUnit().send();
+        BigInteger value =   BigDecimal.valueOf( Math.pow(10,minUnit.doubleValue())).multiply(contractReq.getAmount()).toBigInteger();
 
-        BAC001 bac001 =  getBAC001(groupId,userAddress, contractReq.getAssetContractAddress());
-        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,new BigInteger("100000")).send();
+        int initiatorGroupId  =  contractReq.getInitiatorInfo().getInitiatorGroupId();
+        BigDecimal initiatorValue = contractReq.getInitiatorInfo().getInitiatorValue();
+        String initiatorAssetContractAddress = contractReq.getInitiatorInfo().getInitiatorAssetContractAddress();
+        BigInteger initiatorMinUnit = contractReq.getInitiatorInfo().getInitiatorAssetMinunit();
+        BigInteger initiatorRealValue = getInitiatorValue(initiatorMinUnit, userAddress, initiatorGroupId, initiatorValue, initiatorAssetContractAddress);
+        log.info("initiatorRealValue ： " + initiatorRealValue);
 
+        chekoutCounterpartyDeposit(initiatorRealValue,contractReq.getInitiatorInfo().getInitiatorContractId(), initiatorGroupId ,userAddress,contractReq.getInitiatorInfo().getInitiatorHtlcContractAddress());
+
+        TransactionReceipt transactionReceipt001 =bac001.approve(htlcContractAddress,value).send();
         dealWithReceipt(transactionReceipt001);
 
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
         byte[] hash ;
-        hash = Hash.sha256(Tools.stringToByte32Array(contractReq.getSecerte()));
+        hash = Util.hexStringToBytes(contractReq.getSecerte());
 
-        TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), contractReq.getAmount()).send();
+        TransactionReceipt transactionReceipt = hashedTimelockBAC001.newContract(contractReq.getReceiver(),hash, contractReq.getLockTime(), contractReq.getAssetContractAddress(), value).send();
 
         dealWithReceipt(transactionReceipt);
         return transactionReceipt.getOutput();
@@ -81,9 +97,23 @@ public class TradeService {
 
     }
 
-    public String withdraw(WithDrawReq withDrawReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
+    private BigInteger getInitiatorValue(BigInteger initiatorMinUnit, String userAddress, int initiatorGroupId, BigDecimal initiatorValue, String initiatorAssetContractAddress) throws Exception {
+        BAC001 initiatorBac001 = getBAC001(initiatorGroupId,userAddress,initiatorAssetContractAddress);
+        if(initiatorMinUnit == null) {
+             initiatorMinUnit = initiatorBac001.minUnit().send();
+        }
+        return BigDecimal.valueOf( Math.pow(10, initiatorMinUnit.doubleValue())).multiply(initiatorValue).toBigInteger();
+    }
 
-        chekoutCounterpartyDeposit(withDrawReq.getValue(),withDrawReq.getContractId(), groupId,userAddress,htlcContractAddress);
+    public String withdraw(WithDrawReq withDrawReq, int groupId, String userAddress, String htlcContractAddress) throws Exception {
+        BigInteger minUint = withDrawReq.getPartnerAssetMinunit();
+
+        if(minUint == null) {
+          BAC001 bac001 = getBAC001(groupId, userAddress, withDrawReq.getPartnerAssetAddress());
+          minUint = bac001.minUnit().send();
+       }
+        BigInteger realValue  =  BigDecimal.valueOf( Math.pow(10, minUint.doubleValue())).multiply(withDrawReq.getValue()).toBigInteger();
+        chekoutCounterpartyDeposit(realValue ,withDrawReq.getContractId(), groupId,userAddress, htlcContractAddress);
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
 
         byte[] contractId = Util.hexStringToBytes(withDrawReq.getContractId().substring(2));
@@ -101,7 +131,8 @@ public class TradeService {
         byte[] contractIdBytes = Util.hexStringToBytes(contractId.substring(2));
         Tuple9<String, String, String, BigInteger, byte[], BigInteger, Boolean, Boolean, byte[]> output = hashedTimelockBAC001.getContract(contractIdBytes).send();
         BigInteger amount   = output.getValue4();
-        if(value != amount) {
+
+        if(value .intValue() != amount.intValue()) {
             throw new FrontException("the counterpart's value not match");
         }
 
@@ -112,19 +143,19 @@ public class TradeService {
         HashedTimelockBAC001 hashedTimelockBAC001 = getHashedTimelockBAC001(groupId, userAddress, htlcContractAddress);
 
         byte[] contractId = Util.hexStringToBytes(refundReq.getContractId().substring(2));
-        TransactionReceipt transactionReceipt = hashedTimelockBAC001.refund( contractId).send();
+        TransactionReceipt transactionReceipt = hashedTimelockBAC001.refund(contractId).send();
 
         dealWithReceipt(transactionReceipt);
         return transactionReceipt.getOutput();
     }
 
     public static void dealWithReceipt(TransactionReceipt transactionReceipt) {
-        log.info("*********"+ transactionReceipt.getOutput());
+       // log.info("*********"+ transactionReceipt.getOutput());
         if ("0x16".equals(transactionReceipt.getStatus()) && transactionReceipt.getOutput().startsWith("0x08c379a0")) {
             throw new FrontException(DecodeOutputUtils.decodeOutputReturnString0x16(transactionReceipt.getOutput()));
         }
         if (!"0x0".equals(transactionReceipt.getStatus())) {
-            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus());
+            throw new FrontException(Thread.currentThread().getStackTrace()[2].getMethodName() + " 交易失败,状态：" + transactionReceipt.getStatus() + "交易返回 " + transactionReceipt.getOutput());
         }
     }
 
@@ -162,8 +193,14 @@ public class TradeService {
     }
 
     public Map getHTLCAddress() {
-        return htlcMap;
-    }
 
+        List<HTLCInfo> htlcInfos = htlcInfoService.findAll();
+
+        for (int i = 0; i < htlcInfos.size(); i++) {
+            HTLCInfo htlcInfo = htlcInfos.get(i);
+            imap.put(htlcInfo.getGroupId(),htlcInfo.getContractAddress());
+        }
+        return imap;
+    }
 
 }

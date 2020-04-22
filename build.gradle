@@ -23,16 +23,6 @@ repositories {
 
 }
 
-def spring_version="4.3.16.RELEASE"
-List spring =[ 
-	"org.springframework:spring-core:$spring_version", 
-	"org.springframework:spring-beans:$spring_version", 
-	"org.springframework:spring-context:$spring_version", 
-	"org.springframework:spring-tx:$spring_version", 
-	"org.springframework:spring-web:$spring_version", 
-	"org.springframework:spring-webmvc:$spring_version", 
-	"org.springframework:spring-jdbc:$spring_version"
-]
 
 def spring_boot_version="1.5.9.RELEASE"
 List spring_boot =[ 
@@ -40,6 +30,8 @@ List spring_boot =[
 	"org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version",
 	"org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version",
 	"org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version",
+	"org.springframework.boot:spring-boot-starter-security:$spring_boot_version",
+	"org.springframework.boot:spring-boot-starter-websocket:$spring_boot_version"
 	//"org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
 ]
 
@@ -61,12 +53,14 @@ List logger = [
 
 
 dependencies {
-    compile spring,spring_boot,swagger,logger
+    compile spring_boot,swagger,logger
 
-	compile 'org.fisco-bcos:web3sdk:2.0.5'
+	compile 'org.fisco-bcos:web3sdk:2.1.0'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
+	//compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '1.5.9.RELEASE'
+
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8'
-//	compile "org.fisco-bcos:web3sdk:2.0.0-SNAPSHOT"
-//	compile group:"org.fisco-bcos", name:"web3sdk", version:"2.0.0-SNAPSHOT", changing: true
 	compile 'com.alibaba:fastjson:1.2.58'
 	compile 'com.h2database:h2:1.4.197'
     compile 'org.fusesource:sigar:1.6.4'
@@ -106,17 +100,13 @@ jar {
     doLast {
         copy {
             from file('src/main/resources/')
-            into 'dist/conf_template'
+            into 'dist/conf'
 			exclude '**/static'
         }
 		copy {
 			from file('src/main/resources/static')
 			into 'dist/static'
 		}
-        copy {
-            from file('report/')
-            into 'dist/report'
-        }
 		copy {
 			from configurations.runtime
 			into 'dist/lib'

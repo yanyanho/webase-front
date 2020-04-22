@@ -35,4 +35,8 @@ gradle.properties
 /log
 /dist
 src/main/resources/application.yml
+src/test/resources/applicationContext.xml
+ca.crt
+node.crt
+node.key
 

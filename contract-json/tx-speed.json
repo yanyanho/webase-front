@@ -1,0 +1,275 @@
+[
+//创建资产通道网络
+  {
+    "request": "http://localhost:5002/tx-speed/create-bac-network?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&assetAddress=0x8511decf9cec26d38db522fe6b3080a747c7566e",
+    "response": {
+      "0xd5ad61903897cc23d0f2bde27878535fa226ee2d"
+    }
+  },
+  //开启通道
+  {
+    "request": "http://localhost:5002/tx-speed/channel-open?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+    "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+    "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+    "settleTimeout":3600000
+    },
+    "response": {
+      1  // 通道编号
+    }
+  },
+
+
+  {
+    // 存钱
+    "request": "http://localhost:5002/tx-speed/deposit?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "participant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "partner":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "channelIdentifier":1,
+      "totalDeposit":100
+    },
+    "response": {
+        ture
+    }
+  },
+  {
+    // 链下转账
+    "request": "http://localhost:5002/tx-speed/transfer?userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "bacNetworkAddress":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "channelIdentifier":1,
+      "fromAddress":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "toAddress":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "nonce":3,
+      "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "participant1Balance":90,
+      "participant2Balance":10,
+      "status":1
+
+    },
+    "response": {
+      "id": 129,
+      "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "channelIdentifier": 1,
+      "fromAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "toAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "value": null,
+      "nonce": 3,
+      "fromBalanceHash": "8259637DEDAE6C1A38C00B0F5EF6E7FB2FBAF4826D8C0C493391F7DE698DE23D",
+      "fromSignature": "16B1A08AC2840FCA53ABE9DD571A68AA24F781E26EE2E7957A45460F57023A05792C75ABA4AF4D8D7EB7D87ED719378F00699D812BA33EFDEF891232EEA0DAB21C",
+      "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "participant1Balance": 90,
+      "participant2Balance": 10,
+      "status": true,
+      "createTime": "2019-11-22 12:37:02"
+    }
+  },
+  {
+    // 链下转账取消
+    "request": "http://localhost:5002/tx-speed/transfer/cancel",
+    "body": {
+      "tranferLogId":65
+    },
+    "response": {
+        ture
+    }
+  },
+
+  {
+    // 查询通道详情
+    "request": "http://localhost:5002/tx-speed/participant-info?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&partnerAdress=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
+
+    "response": {
+    "lockedAmount": 0,
+    "lockroot": "0000000000000000000000000000000000000000000000000000000000000000",
+    "balanchHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "isTheCloser": false,
+    "deposit": 100,
+    "nonce": 0,
+    "withdraw": 0
+
+    }
+  } ,
+  {
+    // 查询通道状态
+    "request": "http://localhost:5002/tx-speed/channel-state?groupId=1&participant2=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d&participant1=0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6&channelIdentifier=1",
+
+    "response": {
+//结算超时时间
+    "settle_block_number": 10,
+
+//      NonExistent, // 0
+//      Opened,      // 1
+//      Closed,      // 2
+//      Settled,     // 3; Note: The channel has at least one pending unlock
+//      Removed      // 4; Note: Channel data is removed, there are no pending unlocks
+     "state": 1
+
+    }
+  },
+  {
+    // 查询通道状态
+    "request": "http://localhost:5002/tx-speed/transfer-log?bacNetworkAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&channelIdentifier=1",
+    "response": {
+      "content": [
+        {
+          "id": 193,
+          "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "channelIdentifier": 1,
+          "fromAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "toAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "value": null,
+          "nonce": 5,
+          "fromBalanceHash": "2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
+          "fromSignature": "56C341734BF492EC77DB7D80C0F0E77D61422B680A940B3F4A33FBB37591A6535F032249BF8F90E4A8FC689F6DAE0FCD31156FC1B31552CE280E0B1C2A93A9091C",
+          "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "participant1Balance": 70,
+          "participant2Balance": 30,
+          "status": true,
+          "createTime": "2019-11-22 17:08:07"
+        },
+        {
+          "id": 161,
+          "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "channelIdentifier": 1,
+          "fromAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "toAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "value": null,
+          "nonce": 4,
+          "fromBalanceHash": "D9C98C72916CBB3755190847661597D539419E6D4686C84DAA954124C2446184",
+          "fromSignature": "A49180DC83F8F5DD3CB0802BC172FB79FEE035F93955DE0CE751A5E83064070E3DA4C8053531371ECAA0461C543B44DE4117238B237C4E1D5F77DB7BB1DA16091C",
+          "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "participant1Balance": 80,
+          "participant2Balance": 20,
+          "status": true,
+          "createTime": "2019-11-22 16:07:38"
+        },
+        {
+          "id": 129,
+          "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "channelIdentifier": 1,
+          "fromAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "toAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "value": null,
+          "nonce": 3,
+          "fromBalanceHash": "8259637DEDAE6C1A38C00B0F5EF6E7FB2FBAF4826D8C0C493391F7DE698DE23D",
+          "fromSignature": "16B1A08AC2840FCA53ABE9DD571A68AA24F781E26EE2E7957A45460F57023A05792C75ABA4AF4D8D7EB7D87ED719378F00699D812BA33EFDEF891232EEA0DAB21C",
+          "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "participant1Balance": 90,
+          "participant2Balance": 10,
+          "status": false,
+          "createTime": "2019-11-22 12:37:02"
+        },
+        {
+          "id": 97,
+          "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "channelIdentifier": 1,
+          "fromAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "toAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "value": null,
+          "nonce": 2,
+          "fromBalanceHash": "8259637DEDAE6C1A38C00B0F5EF6E7FB2FBAF4826D8C0C493391F7DE698DE23D",
+          "fromSignature": "35CCD1ACE715C855A8504126FAA2CA707D92536D7B9BEFC226841A7615BD3AB60D4034BEE633E61E63E2082B53C3FF068083F366D51146C7D8B2166274918E6F1B",
+          "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "participant1Balance": 90,
+          "participant2Balance": 10,
+          "status": false,
+          "createTime": null
+        },
+        {
+          "id": 65,
+          "bacNetworkAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "channelIdentifier": 1,
+          "fromAddress": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "toAddress": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "value": null,
+          "nonce": 1,
+          "fromBalanceHash": "8259637DEDAE6C1A38C00B0F5EF6E7FB2FBAF4826D8C0C493391F7DE698DE23D",
+          "fromSignature": "9D4910895C2DC70B1ACA1803942A5F89C866D5372A70D532656644D9D116CE6F69C5C1E4DB4A2FFAC5BB933A6EB01D7FD6F86B479B6F75AC587AA0F271B67CAA1C",
+          "participant1": "0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+          "participant2": "0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+          "participant1Balance": 90,
+          "participant2Balance": 10,
+          "status": true,
+          "createTime": null
+        }
+      ],
+      "totalPages": 1,
+      "totalElements": 5,
+      "last": true,
+      "number": 0,
+      "size": 10,
+      "sort": [
+        {
+          "direction": "DESC",
+          "property": "createTime",
+          "ignoreCase": false,
+          "nullHandling": "NATIVE",
+          "ascending": false,
+          "descending": true
+        }
+      ],
+      "numberOfElements": 5,
+      "first": true
+    }
+  },
+
+  //通道关闭
+  {
+    "request": "http://localhost:5002/tx-speed/channel-close?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "channelIdentifier":1,
+      "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "closingParticipantBalance":100,
+      "nonClosingParticipant":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "nonClosingParticipantBalance":20,
+      "nonce":4,
+      "nonClosingBalanceHash":"2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
+      "nonClosingSignature":"56C341734BF492EC77DB7D80C0F0E77D61422B680A940B3F4A33FBB37591A6535F032249BF8F90E4A8FC689F6DAE0FCD31156FC1B31552CE280E0B1C2A93A9091C"
+    },
+    "response": {
+      true;
+    }
+  },
+
+  //更新对方余额
+  {
+    "request": "http://localhost:5002/tx-speed/update-balacne-proof?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "channelIdentifier":1,
+      "closingParticipant":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "nonClosingParticipant":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "closingParticipantBalance":20,
+      "closingParticipantNonce":4,
+      "balanceHashClosing":"2260FB09C8C9B3CB24C0A2F361AA6DACB2E0E349CB0D867B5D616D5BDAC9A069",
+      "closingSignature":"56C341734BF492EC77DB7D80C0F0E77D61422B680A940B3F4A33FBB37591A6535F032249BF8F90E4A8FC689F6DAE0FCD31156FC1B31552CE280E0B1C2A93A9091C"
+    },
+    "response": {
+      true;
+    }
+  },
+  //通道结算
+  {
+    "request": "http://localhost:5002/tx-speed/settle?groupId=1&userAddress=0x86b83442caeeb02966ed9ae9bd782b27d919b677&bacNetworkAddress=0xd5ad61903897cc23d0f2bde27878535fa226ee2d",
+    "body": {
+      "channelIdentifier":1,
+      "participant1":"0x86b83442caeeb02966ed9ae9bd782b27d919b677",
+      "participant1TransferredAmount":180,
+      "participant1LockedAmount":0,
+      "participant2":"0xf3e3b7f1fc2fc5b0dde66ab8f02cbd418fa2b7e6",
+      "participant2TransferredAmount":20,
+      "participant2LockedAmount":0
+    },
+    "response": {
+      true;
+    }
+  }
+  ]
+
