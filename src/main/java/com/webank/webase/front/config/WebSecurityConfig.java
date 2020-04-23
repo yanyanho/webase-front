@@ -42,17 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withUsername("admin")
-//                        .password("admin")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
+
 
     @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
