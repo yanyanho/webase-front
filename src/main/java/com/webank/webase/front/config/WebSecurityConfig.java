@@ -7,6 +7,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,12 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/account/login","/login", "/home").permitAll()
+                .antMatchers("/global/**","/static/**").permitAll()
+              //  .antMatchers("/account/login","/login", "/index*").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf()
                 .disable() // close csrf
                 .formLogin()
-                .loginPage("/login").loginProcessingUrl("/account/login")
+                .loginPage("/index.html").loginProcessingUrl("/account/login")
                 .usernameParameter("account").passwordParameter("accountPwd").permitAll()
                 .successHandler(loginSuccessHandler) // if login success
                 .failureHandler(loginFailHandler)
@@ -56,7 +58,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new InMemoryUserDetailsManager(user);
 //    }
 
-
+//    @Override
+//    public void configure(WebSecurity web)   {
+//        web.ignoring().antMatchers("/global/**","/static/**","/css/**","/js/**");
+//    }
     @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth.inMemoryAuthentication()
