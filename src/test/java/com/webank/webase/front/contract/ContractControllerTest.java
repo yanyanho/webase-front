@@ -21,6 +21,8 @@ import com.webank.webase.front.contract.entity.ReqContractSave;
 import com.webank.webase.front.contract.entity.ReqDeploy;
 import com.webank.webase.front.contract.entity.ReqPageContract;
 import java.util.List;
+
+import com.webank.webase.front.trade.request.ContractReq;
 import org.fisco.bcos.web3j.protocol.core.methods.response.AbiDefinition;
 import org.junit.Before;
 import org.junit.Test;
@@ -187,6 +189,31 @@ public class ContractControllerTest {
             .println("response:" + resultActions.andReturn().getResponse().getContentAsString());
     }
 */
+
+//@Test
+//public void testHtlc() throws Exception {
+//
+//
+//    //param
+//    ContractReq contractReq = new ContractReq();
+//    contractReq.setGroupId(groupId);
+//    contractReq.setUser("0x58415e44c664af1eab071da728a8405afa1991f3");
+//    contractReq.setContractId(1L);
+//    deployInputParam.setContractName("a");
+//
+//
+//    ResultActions resultActions = mockMvc
+//            .perform(MockMvcRequestBuilders.post("/trade/new-contract-initiator").
+//                    content(JSON.toJSONString(deployInputParam)).
+//
+//                    contentType(MediaType.APPLICATION_JSON)
+//            );
+//    resultActions.
+//            andExpect(MockMvcResultMatchers.status().isOk()).
+//            andDo(MockMvcResultHandlers.print());
+//    System.out
+//            .println("response:" + resultActions.andReturn().getResponse().getContentAsString());
+//}
 
 
 }

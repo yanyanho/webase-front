@@ -6,22 +6,39 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    @Autowired
+    private AuthenticationSuccessHandler loginSuccessHandler;
+    @Autowired
+    private AuthenticationFailureHandler loginFailHandler;
+    @Autowired
+    private JsonLogoutSuccessHandler logoutSuccessHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers("/global/**","/static/**").permitAll()
+              //  .antMatchers("/account/login","/login", "/index*").permitAll()
                 .anyRequest().authenticated()
-                .and()
+                .and().csrf()
+                .disable() // close csrf
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                .loginPage("/index.html").loginProcessingUrl("/account/login")
+                .usernameParameter("account").passwordParameter("accountPwd").permitAll()
+                .successHandler(loginSuccessHandler) // if login success
+                .failureHandler(loginFailHandler)
                 .and()
                 .logout()
+                .logoutUrl("/account/logout")
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll();
     }
 
@@ -36,7 +53,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //        return new InMemoryUserDetailsManager(user);
 //    }
-
 
     @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
