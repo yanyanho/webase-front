@@ -70,11 +70,11 @@ public class KeyStoreService {
                 log.error("fail createKeyStore. user name is null.");
                 throw new FrontException(ConstantCode.USER_NAME_NULL);
             }
-            KeyStoreInfo keyStoreInfoLocal = keystoreRepository.findByUserNameAndType(userName, type);
-            if (keyStoreInfoLocal != null) {
-                log.error("fail createKeyStore. user name already exists.");
-                throw new FrontException(ConstantCode.USER_NAME_EXISTS);
-            }
+//            KeyStoreInfo keyStoreInfoLocal = keystoreRepository.findByUserNameAndType(userName, type);
+//            if (keyStoreInfoLocal != null) {
+//                log.error("fail createKeyStore. user name already exists.");
+//                throw new FrontException(ConstantCode.USER_NAME_EXISTS);
+//            }
         }
         // create
         try {
@@ -116,12 +116,16 @@ public class KeyStoreService {
     /**
      * getLocalKeyStores.
      */
-    public List<KeyStoreInfo> getLocalKeyStores() {
+    public List<KeyStoreInfo> getLocalKeyStores(String userName) {
         Sort sort = new Sort(Sort.Direction.ASC, "userName");
         List<KeyStoreInfo> keyStores = keystoreRepository.findAll(
                 (Root<KeyStoreInfo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
                     Predicate predicate = criteriaBuilder.equal(root.get("type"), KeyTypes.LOCALUSER.getValue());
-                    return criteriaBuilder.and(predicate);
+                    Predicate predicate1 = criteriaBuilder.equal(root.get("userName"), userName);
+
+
+
+                    return criteriaBuilder.and(predicate,predicate1);
                 }, sort);
         for (KeyStoreInfo keyStoreInfo : keyStores) {
             keyStoreInfo.setPrivateKey(aesUtils.aesDecrypt(keyStoreInfo.getPrivateKey()));

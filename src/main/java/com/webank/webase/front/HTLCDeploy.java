@@ -1,5 +1,7 @@
 package com.webank.webase.front;
 
+import com.webank.webase.front.account.User;
+import com.webank.webase.front.account.UserRepository;
 import com.webank.webase.front.trade.polo.AssetNetworkRegistry;
 import com.webank.webase.front.trade.polo.Exchange;
 import com.webank.webase.front.trade.polo.HashedTimelockBAC001;
@@ -12,6 +14,7 @@ import org.fisco.bcos.web3j.protocol.Web3j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -29,6 +32,10 @@ public class HTLCDeploy  implements ApplicationRunner {
     Map<Integer, Web3j> web3jMap;
     @Autowired
     HTLCInfoService htlcInfoService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -41,26 +48,34 @@ public class HTLCDeploy  implements ApplicationRunner {
             Integer key =  (Integer)entry.getKey();
             Web3j value = (Web3j) entry.getValue();
 
-//           if(htlcInfoService.findByGroupId(key.intValue()) == null ) {
-//                String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
-//                String exchangeContractAddress = Exchange.deploy(value, credentials, contractGasProvider,credentials.getAddress()).send().getContractAddress();
-//               SecretRegistry secretRegistry = SecretRegistry.deploy(value, credentials, contractGasProvider).send();
-//               String secretAddress = secretRegistry.getContractAddress();
-//               //TokenNetworkRegistry public static RemoteCall<TokenNetworkRegistry> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String _secret_registry_address, BigInteger _chain_id, BigInteger _settlement_timeout_min, BigInteger _settlement_timeout_max, BigInteger _max_token_networks) {
-//               AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("10000")).send();
-//               log.info("************&&&&&&&&&&&&&"  + tokenNetworkRegistry.getContractAddress());
-//                HTLCInfo htlcInfo = new HTLCInfo();
-//                htlcInfo.setGroupId(key);
-//                htlcInfo.setContractAddress(contractAddress);
-//                htlcInfo.setExchangeContractAddress(exchangeContractAddress);
-//                htlcInfo.setSecretAddress(secretAddress);
-//                htlcInfo.setTokenNetworkRegistry(tokenNetworkRegistry.getContractAddress());
-//                htlcInfo.setCreateTime(LocalDateTime.now());
-//                htlcInfoService.save(htlcInfo);
-//                log.info("htlc:{} addresee {} save success", key, contractAddress);
-//                log.info("exchange:{} addresee {} save success", key, exchangeContractAddress);
-//                log.info("secretAddress:{} addresee {} save success", key, secretAddress);
-//            }
+           if(htlcInfoService.findByGroupId(key.intValue()) == null ) {
+                String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
+                String exchangeContractAddress = Exchange.deploy(value, credentials, contractGasProvider,credentials.getAddress()).send().getContractAddress();
+               SecretRegistry secretRegistry = SecretRegistry.deploy(value, credentials, contractGasProvider).send();
+               String secretAddress = secretRegistry.getContractAddress();
+               //TokenNetworkRegistry public static RemoteCall<TokenNetworkRegistry> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String _secret_registry_address, BigInteger _chain_id, BigInteger _settlement_timeout_min, BigInteger _settlement_timeout_max, BigInteger _max_token_networks) {
+               AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("10000")).send();
+               log.info("************&&&&&&&&&&&&&"  + tokenNetworkRegistry.getContractAddress());
+                HTLCInfo htlcInfo = new HTLCInfo();
+                htlcInfo.setGroupId(key);
+                htlcInfo.setContractAddress(contractAddress);
+                htlcInfo.setExchangeContractAddress(exchangeContractAddress);
+                htlcInfo.setSecretAddress(secretAddress);
+                htlcInfo.setTokenNetworkRegistry(tokenNetworkRegistry.getContractAddress());
+                htlcInfo.setCreateTime(LocalDateTime.now());
+                htlcInfoService.save(htlcInfo);
+                log.info("htlc:{} addresee {} save success", key, contractAddress);
+                log.info("exchange:{} addresee {} save success", key, exchangeContractAddress);
+                log.info("secretAddress:{} addresee {} save success", key, secretAddress);
+            }
+        }
+        if(userRepository.findByUsername("admin")== null){
+            User user = new User();
+            user.setId(1L);
+            user.setPassword(passwordEncoder.encode("admin"));
+            user.setUsername("admin");
+            userRepository.save(user);
+
         }
     }
 }

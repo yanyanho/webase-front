@@ -9,7 +9,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     database: H2
-    openInView: false
+    openInView: true
     show_sql: true
     generate-ddl: true
     hibernate:
@@ -40,8 +40,8 @@ sdk:
   queueCapacity: 100
   timeout: 10000
   keepAlive: 60
-  ip: 127.0.0.1
-  channelPort: 20200
+  ip: 119.23.46.126
+  channelPort: 21200
 
 logging:
   config: classpath:log4j2.xml
