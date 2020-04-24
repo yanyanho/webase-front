@@ -32,13 +32,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().disable();
         http
                 .authorizeRequests()
                 .antMatchers("/global/**","/static/**","/console/**","/user/register").permitAll()
               //  .antMatchers("/account/login","/login", "/index*").permitAll()
                 .anyRequest().authenticated()
-                .and().csrf()
-                .disable() // close csrf
+                .and()
+                .csrf().disable() // close csrf
                 .formLogin()
                 .loginPage("/index.html").loginProcessingUrl("/account/login")
                 .usernameParameter("account").passwordParameter("accountPwd").permitAll()
