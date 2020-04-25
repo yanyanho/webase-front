@@ -69,4 +69,8 @@ public interface ConstantCode {
     /* system error */
     RetCode SYSTEM_ERROR = RetCode.mark(101001, "system error");
     RetCode PARAM_VAILD_FAIL = RetCode.mark(101002, "param valid fail");
+
+    public static final RetCode USER_NOT_LOGGED_IN = RetCode.mark(302000, "user not logged in");
+    public static final RetCode ACCESS_DENIED = RetCode.mark(302001, "access denied");
+
 }

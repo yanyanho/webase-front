@@ -26,7 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler loginFailHandler;
     @Autowired
     private JsonLogoutSuccessHandler logoutSuccessHandler;
-
+    @Autowired
+    private  JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
     @Autowired
     private MyUserDetailsService userDetailsService;
 
@@ -40,6 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable() // close csrf
+                .httpBasic().authenticationEntryPoint(jsonAuthenticationEntryPoint).and()
+               // .exceptionHandling().authenticationEntryPoint( jsonAuthenticationEntryPoint).and()
                 .formLogin()
                 .loginPage("/index.html").loginProcessingUrl("/account/login")
                 .usernameParameter("account").passwordParameter("accountPwd").permitAll()
