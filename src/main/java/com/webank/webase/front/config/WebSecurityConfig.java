@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/global/**","/static/**","/console/**","/user/register").permitAll()
+                .antMatchers("/global/**","/static/**","/console/**","/user/register","/websocket/*").permitAll()
               //  .antMatchers("/account/login","/login", "/index*").permitAll()
                 .anyRequest().authenticated()
                 .and()
