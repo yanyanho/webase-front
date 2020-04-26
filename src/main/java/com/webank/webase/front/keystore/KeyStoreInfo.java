@@ -1,9 +1,11 @@
 package com.webank.webase.front.keystore;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -29,4 +31,6 @@ public class KeyStoreInfo {
     private String privateKey;
     private String userName;
     private int type;
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 }

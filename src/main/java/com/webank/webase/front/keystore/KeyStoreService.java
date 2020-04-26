@@ -13,6 +13,7 @@
  */
 package com.webank.webase.front.keystore;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -117,7 +118,7 @@ public class KeyStoreService {
      * getLocalKeyStores.
      */
     public List<KeyStoreInfo> getLocalKeyStores(String userName) {
-        Sort sort = new Sort(Sort.Direction.ASC, "userName");
+        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
         List<KeyStoreInfo> keyStores = keystoreRepository.findAll(
                 (Root<KeyStoreInfo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
                     Predicate predicate = criteriaBuilder.equal(root.get("type"), KeyTypes.LOCALUSER.getValue());
@@ -157,6 +158,7 @@ public class KeyStoreService {
         keyStoreInfo.setPrivateKey(aesUtils.aesEncrypt(privateKey));
         keyStoreInfo.setUserName(userName);
         keyStoreInfo.setType(type);
+        keyStoreInfo.setCreateTime(LocalDateTime.now());
         if (type != KeyTypes.LOCALRANDOM.getValue()) {
             keystoreRepository.save(keyStoreInfo);
         }
