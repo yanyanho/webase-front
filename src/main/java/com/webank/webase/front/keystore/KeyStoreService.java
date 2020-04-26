@@ -89,10 +89,10 @@ public class KeyStoreService {
     /**
      * get KeyStoreInfo by privateKey.
      */
-    public KeyStoreInfo getKeyStoreFromPrivateKey(String privateKey, boolean useAes, int type, String userName) {
-        log.info("start getKeyStoreFromPrivateKey. privateKey:{} userName:{}", privateKey, userName);
+    public KeyStoreInfo importKeyStoreFromPrivateKey(String privateKey, boolean useAes, int type, String userName) {
+        log.info("start importKeyStoreFromPrivateKey. privateKey:{} userName:{}", privateKey, userName);
         if (StringUtils.isBlank(privateKey)) {
-            log.error("fail getKeyStoreFromPrivateKey. private key is null");
+            log.error("fail importKeyStoreFromPrivateKey. private key is null");
             throw new FrontException(ConstantCode.PRIVATEKEY_IS_NULL);
         }
         if (StringUtils.isBlank(userName)) {
@@ -101,14 +101,14 @@ public class KeyStoreService {
         }
         KeyStoreInfo keyStoreInfoLocal = keystoreRepository.findByPrivateKey(privateKey);
         if (keyStoreInfoLocal != null) {
-            log.error("fail getKeyStoreFromPrivateKey. private key already exists");
+            log.error("fail importKeyStoreFromPrivateKey. private key already exists");
             throw new FrontException(ConstantCode.PRIVATEKEY_EXISTS);
         }
-        KeyStoreInfo userInfo = keystoreRepository.findByUserNameAndType(userName, type);
-        if (userInfo != null) {
-            log.error("fail getKeyStoreFromPrivateKey. user name already exists.");
-            throw new FrontException(ConstantCode.USER_NAME_EXISTS);
-        }
+//        KeyStoreInfo userInfo = keystoreRepository.findByUserNameAndType(userName, type);
+//        if (userInfo != null) {
+//            log.error("fail importKeyStoreFromPrivateKey. user name already exists.");
+//            throw new FrontException(ConstantCode.USER_NAME_EXISTS);
+//        }
         ECKeyPair keyPair = ECKeyPair.create(Numeric.toBigInt(privateKey));
         return keyPair2KeyStoreInfo(keyPair, useAes, type, userName);
     }
