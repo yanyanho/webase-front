@@ -1,4 +1,4 @@
-package com.webank.webase.front.config.security;
+package com.webank.webase.front.config;
 
 import com.webank.webase.front.account.MyUserDetailsService;
 import com.webank.webase.front.config.security.JsonAuthenticationEntryPoint;
@@ -50,6 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("account").passwordParameter("accountPwd").permitAll()
                 .successHandler(loginSuccessHandler) // if login success
                 .failureHandler(loginFailHandler)
+                .and()
+                .sessionManagement().invalidSessionUrl("/account/login")
                 .and()
                 .logout()
                 .logoutUrl("/account/logout")
