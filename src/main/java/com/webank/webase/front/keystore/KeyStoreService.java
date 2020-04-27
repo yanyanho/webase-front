@@ -112,7 +112,7 @@ public class KeyStoreService {
         KeyStoreInfo userInfo = keystoreRepository.findByAddress(address);
         if (userInfo != null) {
             log.error("fail importKeyStoreFromPrivateKey. privatekey already exists.");
-            throw new FrontException(ConstantCode.USER_NAME_EXISTS);
+            throw new FrontException(ConstantCode.USER_ADDRESS_EXISTS);
         }
 
         return keyPair2KeyStoreInfo(keyPair, useAes, type, userName);
