@@ -1,6 +1,8 @@
-package com.webank.webase.front.config;
+package com.webank.webase.front.config.security;
 
 import com.webank.webase.front.account.MyUserDetailsService;
+import com.webank.webase.front.config.security.JsonAuthenticationEntryPoint;
+import com.webank.webase.front.config.security.JsonLogoutSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JsonLogoutSuccessHandler logoutSuccessHandler;
     @Autowired
-    private  JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
+    private JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
     @Autowired
     private MyUserDetailsService userDetailsService;
 
