@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(loginSuccessHandler) // if login success
                 .failureHandler(loginFailHandler)
                 .and()
-                .sessionManagement().invalidSessionUrl("/account/login")
+                .sessionManagement().maximumSessions(1).and().invalidSessionUrl("/index.html")
                 .and()
                 .logout()
                 .logoutUrl("/account/logout")

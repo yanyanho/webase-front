@@ -105,12 +105,16 @@ public class KeyStoreService {
             log.error("fail importKeyStoreFromPrivateKey. private key already exists");
             throw new FrontException(ConstantCode.PRIVATEKEY_EXISTS);
         }
-//        KeyStoreInfo userInfo = keystoreRepository.findByUserNameAndType(userName, type);
-//        if (userInfo != null) {
-//            log.error("fail importKeyStoreFromPrivateKey. user name already exists.");
-//            throw new FrontException(ConstantCode.USER_NAME_EXISTS);
-//        }
+
+
         ECKeyPair keyPair = ECKeyPair.create(Numeric.toBigInt(privateKey));
+        String address = Numeric.prependHexPrefix(Keys.getAddress(keyPair));
+        KeyStoreInfo userInfo = keystoreRepository.findByAddress(address);
+        if (userInfo != null) {
+            log.error("fail importKeyStoreFromPrivateKey. privatekey already exists.");
+            throw new FrontException(ConstantCode.USER_NAME_EXISTS);
+        }
+
         return keyPair2KeyStoreInfo(keyPair, useAes, type, userName);
     }
     
