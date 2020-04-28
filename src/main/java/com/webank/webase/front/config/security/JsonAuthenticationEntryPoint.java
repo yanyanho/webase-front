@@ -40,6 +40,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.debug("user not logged in");
         BaseResponse baseResponse = new BaseResponse(ConstantCode.USER_NOT_LOGGED_IN);
         response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(405);
         response.getWriter().write(JSON.toJSONString(baseResponse));
     }
 

@@ -31,7 +31,7 @@ spring:
 
 server:
   port: 5002
-  context-path: /
+  context-path: /api
   servlet:
     session:
       timeout: 5
@@ -43,8 +43,8 @@ sdk:
   queueCapacity: 100
   timeout: 10000
   keepAlive: 60
-  ip: 119.23.46.126
-  channelPort: 21200
+  ip: 10.107.105.18
+  channelPort: 20200
 
 logging:
   config: classpath:log4j2.xml
