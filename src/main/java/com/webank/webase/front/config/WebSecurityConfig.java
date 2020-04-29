@@ -3,6 +3,7 @@ package com.webank.webase.front.config;
 import com.webank.webase.front.account.MyUserDetailsService;
 import com.webank.webase.front.config.security.JsonAuthenticationEntryPoint;
 import com.webank.webase.front.config.security.JsonLogoutSuccessHandler;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 
 @Configuration
@@ -32,6 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
     @Autowired
     private MyUserDetailsService userDetailsService;
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,6 +62,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/account/logout")
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll();
+//                .and().rememberMe().tokenRepository(persistentTokenRepository())
+//                // 有效时间：单位s
+//                .tokenValiditySeconds(60);
     }
 
 
@@ -87,5 +95,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
+
+
+
+//
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository(){
+//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+//        tokenRepository.setDataSource(dataSource);
+//        // 如果token表不存在，使用下面语句可以初始化该表；若存在，请注释掉这条语句，否则会报错。
+////        tokenRepository.setCreateTableOnStartup(true);
+//        return tokenRepository;
+//    }
 
 }
