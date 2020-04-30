@@ -10,8 +10,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.fisco.bcos.web3j.tx.txdecode.ConstantProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -52,6 +54,7 @@ public class AssetController {
         return assetService.sendFund(sendReq, contractName, contractAddress, groupId);
     }
 
+    @PreAuthorize("ROLE_ADMIN")
     @PostMapping("/issue")
     public String assetIssue(@RequestBody IssueReq issueReq,
                              @RequestParam(defaultValue = "BAC001") String contractName,
