@@ -54,7 +54,7 @@ public class AssetController {
         return assetService.sendFund(sendReq, contractName, contractAddress, groupId);
     }
 
-    @PreAuthorize("ROLE_ADMIN")
+   // @PreAuthorize("ROLE_ADMIN")
     @PostMapping("/issue")
     public String assetIssue(@RequestBody IssueReq issueReq,
                              @RequestParam(defaultValue = "BAC001") String contractName,
