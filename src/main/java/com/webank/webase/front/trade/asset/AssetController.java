@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -53,6 +54,7 @@ public class AssetController {
     }
 
     @PostMapping("/issue")
+   // @PreAuthorize("hasAuthority('ADMIN')")
     public String assetIssue(@RequestBody IssueReq issueReq,
                              @RequestParam(defaultValue = "BAC001") String contractName,
                              @RequestParam String userAddress,
