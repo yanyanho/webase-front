@@ -64,11 +64,11 @@ public class HTLCDeploy  implements ApplicationRunner {
            if(htlcInfoService.findByGroupId(key.intValue()) == null ) {
                 String contractAddress = HashedTimelockBAC001.deploy(value, credentials, contractGasProvider).send().getContractAddress();
                 String exchangeContractAddress = Exchange.deploy(value, credentials, contractGasProvider,credentials.getAddress()).send().getContractAddress();
-               SecretRegistry secretRegistry = SecretRegistry.deploy(value, credentials, contractGasProvider).send();
-               String secretAddress = secretRegistry.getContractAddress();
+                SecretRegistry secretRegistry = SecretRegistry.deploy(value, credentials, contractGasProvider).send();
+                String secretAddress = secretRegistry.getContractAddress();
                //TokenNetworkRegistry public static RemoteCall<TokenNetworkRegistry> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String _secret_registry_address, BigInteger _chain_id, BigInteger _settlement_timeout_min, BigInteger _settlement_timeout_max, BigInteger _max_token_networks) {
-               AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("10000")).send();
-               log.info("************&&&&&&&&&&&&&"  + tokenNetworkRegistry.getContractAddress());
+                AssetNetworkRegistry tokenNetworkRegistry = AssetNetworkRegistry.deploy(value, credentials, contractGasProvider,secretAddress,new BigInteger("1"),new BigInteger("60000"),new BigInteger("864000000"),new BigInteger("10000")).send();
+                log.info("************&&&&&&&&&&&&&"  + tokenNetworkRegistry.getContractAddress());
                 HTLCInfo htlcInfo = new HTLCInfo();
                 htlcInfo.setGroupId(key);
                 htlcInfo.setContractAddress(contractAddress);
@@ -94,8 +94,8 @@ public class HTLCDeploy  implements ApplicationRunner {
         if(assetService.findDefaultAsset().isEmpty()) {
 
 
-            if(keyStoreService.getLocalKeyStores("admin").isEmpty()) {
-                keyStoreService.keyPair2KeyStoreInfo(credentials.getEcKeyPair(), true, 0, "admin");
+            if(keyStoreService.getLocalKeyStores("default").isEmpty()) {
+                keyStoreService.keyPair2KeyStoreInfo(credentials.getEcKeyPair(), true, 0, "default");
                log.info("insert user successfully");
             }
 

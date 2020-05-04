@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:./h2/webasefront;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./h2/webasefront1;DB_CLOSE_ON_EXIT=FALSE
     databaseName: db
     driverClassName: org.h2.Driver
     serverName:
@@ -30,8 +30,8 @@ spring:
         trace: true
 
 server:
-  port: 5002
-  context-path: /api
+  port: 5003
+  context-path: /
   servlet:
     session:
       timeout: 5

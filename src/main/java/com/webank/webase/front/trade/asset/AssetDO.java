@@ -1,5 +1,6 @@
 package com.webank.webase.front.trade.asset;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,8 +44,12 @@ public class AssetDO implements Serializable {
     private String description;
     @Column(name = "owner", columnDefinition = "varchar(66) not null comment '资产拥有者'")
     private String owner;
-    @Column(name = "create_time", columnDefinition = "varchar(255)  not null comment '创建时间'")
+
+    @Column(name = "create_time", columnDefinition = "TIMESTAMP not null comment '创建时间'")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-    @Column(name = "modify_time", columnDefinition = "varchar(255)  not null comment '最近修改时间'")
+
+    @Column(name = "modify_time", columnDefinition = "TIMESTAMP  not null comment '最近修改时间'")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
 }
