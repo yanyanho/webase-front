@@ -237,10 +237,10 @@ public class AssetService {
         List<AssetDO> assetList = assetRepository.findAll(
                 (Root<AssetDO> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
 
-                    Predicate predicate1 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"AAA");
-                    Predicate predicate2 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"BBB");
+                    Predicate predicate1 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"AAA-DEMO");
+                    Predicate predicate2 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"BBB-DEMO");
 
-                    return criteriaBuilder.and(predicate1,predicate2);
+                    return criteriaBuilder.or(predicate1,predicate2);
                 }, sort);
         return assetList;
 

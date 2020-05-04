@@ -148,7 +148,7 @@ public class KeyStoreService {
     /**
      * convert ECKeyPair to KeyStoreInfo.
      */
-    private KeyStoreInfo keyPair2KeyStoreInfo(ECKeyPair keyPair, boolean useAes, int type, String userName) {
+    public KeyStoreInfo keyPair2KeyStoreInfo(ECKeyPair keyPair, boolean useAes, int type, String userName) {
         String publicKey = Numeric
             .toHexStringWithPrefixZeroPadded(keyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX);
         String privateKey = Numeric.toHexStringNoPrefix(keyPair.getPrivateKey());
