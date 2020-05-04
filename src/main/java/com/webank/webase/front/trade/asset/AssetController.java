@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Api(value = "/asset", tags = "asset interface")
@@ -75,6 +76,14 @@ public class AssetController {
         BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
         response.setTotalCount(page.getTotalElements());
         response.setData(page.getContent());
+        return response;
+    }
+
+    @GetMapping("/default-asset")
+    public BasePageResponse findDefaultAssetList() throws FrontException {
+        List<AssetDO> assetList = assetService.findDefaultAsset();
+        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
+        response.setData(assetList);
         return response;
     }
 }

@@ -9,6 +9,7 @@ import com.webank.webase.front.trade.polo.BAC001;
 import com.webank.webase.front.trade.polo.BAC002;
 import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.request.SendReq;
+import com.webank.webase.front.trade.txspeed.translog.TransferLog;
 import lombok.extern.slf4j.Slf4j;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.protocol.Web3j;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static com.webank.webase.front.base.Constants.contractGasProvider;
@@ -228,4 +230,22 @@ public class AssetService {
         return contractPage;
 
     }
+
+    public List<AssetDO> findDefaultAsset() {
+        Sort sort = new Sort(Sort.Direction.DESC, "shortName");
+
+        List<AssetDO> assetList = assetRepository.findAll(
+                (Root<AssetDO> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+
+                    Predicate predicate1 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"AAA");
+                    Predicate predicate2 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"BBB");
+
+                    return criteriaBuilder.and(predicate1,predicate2);
+                }, sort);
+        return assetList;
+
+
+    }
+
+
 }

@@ -2,10 +2,12 @@ package com.webank.webase.front;
 
 import com.webank.webase.front.account.User;
 import com.webank.webase.front.account.UserRepository;
+import com.webank.webase.front.trade.asset.AssetService;
 import com.webank.webase.front.trade.polo.AssetNetworkRegistry;
 import com.webank.webase.front.trade.polo.Exchange;
 import com.webank.webase.front.trade.polo.HashedTimelockBAC001;
 import com.webank.webase.front.trade.polo.SecretRegistry;
+import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfo;
 import com.webank.webase.front.trade.trade.htlc.HTLCInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,10 @@ public class HTLCDeploy  implements ApplicationRunner {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    AssetService assetService;
+
+    public Credentials credentials = Credentials.create("2");
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -77,5 +83,23 @@ public class HTLCDeploy  implements ApplicationRunner {
             userRepository.save(user);
 
         }
+
+        if(assetService.findDefaultAsset().isEmpty()) {
+
+            IssueReq issueReq = new IssueReq();
+            issueReq.setDescription("default BAC001 token");
+            issueReq.setMinUnit(new BigInteger("0"));
+            issueReq.setShortName("AAA");
+            issueReq.setTotalAmount(new BigInteger("100000000"));
+            assetService.issueAsset(issueReq,"BAC001",credentials.getAddress(), 1);
+            IssueReq issueReqBBB = new IssueReq();
+            issueReqBBB.setDescription("default BAC001 token");
+            issueReqBBB.setMinUnit(new BigInteger("0"));
+            issueReqBBB.setShortName("BBB");
+            issueReqBBB.setTotalAmount(new BigInteger("100000000"));
+            assetService.issueAsset(issueReq,"BAC001",credentials.getAddress(), 1);
+
+        }
+
     }
 }
