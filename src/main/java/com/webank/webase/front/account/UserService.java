@@ -1,6 +1,7 @@
 package com.webank.webase.front.account;
 
 import com.webank.webase.front.base.exception.FrontException;
+import com.webank.webase.front.keystore.KeyStoreService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    KeyStoreService keyStoreService;
 
     public User addAccountInfo(User user) {
 
@@ -25,7 +28,11 @@ public class UserService {
 
         String password =   user.getPassword();
         user.setPassword(passwordEncoder.encode(password));
-        return userRepository.save(user);
+        user1 = userRepository.save(user);
+
+        keyStoreService.createKeyStore(true,0,user.getUsername());
+
+        return user1;
     }
 
 
