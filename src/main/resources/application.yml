@@ -32,8 +32,8 @@ spring:
 server:
   port: 5002
   context-path: /
-  session:
-      timeout: 300
+#  session:
+#      timeout: 300
 
 sdk:
   orgName: orgTest
