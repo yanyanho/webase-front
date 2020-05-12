@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.fisco.bcos.web3j.tx.txdecode.ConstantProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,8 +54,8 @@ public class AssetController {
         return assetService.sendFund(sendReq, contractName, contractAddress, groupId);
     }
 
-   // @PreAuthorize("ROLE_ADMIN")
     @PostMapping("/issue")
+   // @PreAuthorize("hasAuthority('ADMIN')")
     public String assetIssue(@RequestBody IssueReq issueReq,
                              @RequestParam(defaultValue = "BAC001") String contractName,
                              @RequestParam String userAddress,
@@ -79,19 +78,11 @@ public class AssetController {
         return response;
     }
 
-    @GetMapping("/default-asset")
-    public BasePageResponse findDefaultAssetList() throws FrontException {
-        List<AssetDO> assetList = assetService.findDefaultAsset();
-        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
-        response.setData(assetList);
-        return response;
-    }
-
-    @GetMapping("/default-asset")
-    public BasePageResponse findAssetList( @RequestParam String shortName,  @RequestParam(defaultValue = "1") int groupId) throws FrontException {
+    @GetMapping("/search")
+    public List<AssetDO> findAssetList( @RequestParam String shortName,  @RequestParam(defaultValue = "1") int groupId) throws FrontException {
         List<AssetDO> assetList = assetService.findAssetByShortName(shortName);
-        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
-        response.setData(assetList);
-        return response;
+//        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
+//        response.setData(assetList);
+        return assetList;
     }
 }

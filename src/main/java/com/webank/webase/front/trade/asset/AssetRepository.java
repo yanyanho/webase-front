@@ -14,6 +14,6 @@ import java.util.List;
 public interface AssetRepository extends
         JpaRepository<AssetDO, String>, JpaSpecificationExecutor<AssetDO> {
 
-    @Query(value = "select t from TB_ASSET  t where t.short_name like %?1%")
+    @Query(value = "select t from tb_asset  t where upper(t.shortName) like %?1% or upper(t.assetAddress)=?1")
     List<AssetDO> findByShortNameLike(String name);
 }
