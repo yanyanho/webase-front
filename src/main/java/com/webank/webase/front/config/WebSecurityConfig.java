@@ -52,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("account").passwordParameter("accountPwd").permitAll()
                 .successHandler(loginSuccessHandler) // if login success
                 .failureHandler(loginFailHandler)
-                .and()
-                .sessionManagement().maximumSessions(1).and().invalidSessionUrl("/index.html")
+//                .and()
+//                .sessionManagement().maximumSessions(1).and().invalidSessionUrl("/index.html")
                 .and()
                 .logout()
                 .logoutUrl("/account/logout")
