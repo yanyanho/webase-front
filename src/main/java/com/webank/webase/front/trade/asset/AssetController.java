@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Api(value = "/asset", tags = "asset interface")
@@ -75,5 +76,13 @@ public class AssetController {
         response.setTotalCount(page.getTotalElements());
         response.setData(page.getContent());
         return response;
+    }
+
+    @GetMapping("/search")
+    public List<AssetDO> findAssetList( @RequestParam String shortName,  @RequestParam(defaultValue = "1") int groupId) throws FrontException {
+        List<AssetDO> assetList = assetService.findAssetByShortName(shortName);
+//        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
+//        response.setData(assetList);
+        return assetList;
     }
 }

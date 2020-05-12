@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static com.webank.webase.front.base.Constants.contractGasProvider;
@@ -230,4 +231,12 @@ public class AssetService {
         return contractPage;
 
     }
+
+
+    public List<AssetDO> findAssetByShortName(String shortName) {
+
+        return  assetRepository.findByShortNameLike((shortName).toUpperCase());
+    }
+
+
 }
