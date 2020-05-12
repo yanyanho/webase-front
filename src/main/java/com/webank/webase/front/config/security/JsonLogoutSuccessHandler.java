@@ -38,5 +38,5 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
 
         log.debug("logout success");
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(JSON.toJSONString("failed"));   }
+        response.getWriter().write(JSON.toJSONString("success"));   }
 }
