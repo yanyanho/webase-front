@@ -197,7 +197,9 @@ public class AssetService {
             minUnit = issueReq.getMinUnit() == null ? BigInteger.valueOf(0) : issueReq.getMinUnit();
         }
 
-
+        if(issueReq.getTotalAmount().compareTo(new BigInteger("7fffffffffffffff",16))>0) {
+            throw new FrontException("totalAmount must less than 0x7fffffffffffffff");
+        }
         AssetDO assetDO = new AssetDO();
         assetDO.setContractName(contractName)
                 .setAssetGroup(groupId)
