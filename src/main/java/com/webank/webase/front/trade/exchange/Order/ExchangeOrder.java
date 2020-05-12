@@ -24,9 +24,11 @@ public class ExchangeOrder {
     private BigInteger availableVolumn;
     private BigInteger random;
     private String     assetGet;
+    private String assetGetShortName;
     private BigInteger amountGet;
     private BigInteger amountGetLeft;
     private String     assetGive;
+    private String assetGiveShortName;
     private BigInteger amountGive;
     private BigInteger expires;
     private BigInteger assetGetMinUnit;
