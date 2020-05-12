@@ -89,7 +89,8 @@ public class ExchangeService {
         BigInteger assetGiveMinUnit = orderReq.getAssetGiveMinUnit();
         BigInteger amountGetValue =   orderReq.getAmountGet().multiply(BigDecimal.valueOf( Math.pow(10,assetGetMinUnit.doubleValue()))).toBigInteger();
         BigInteger amountGiveValue =  orderReq.getAmountGive().multiply(BigDecimal.valueOf( Math.pow(10,assetGiveMinUnit.doubleValue()))).toBigInteger();
-
+        String  assetGetShortName  =  orderReq.getAssetGetShortName();
+        String  assetGiveShortName =  orderReq.getAssetGiveShortName();
         TransactionReceipt transactionReceipt = exchange.order(orderReq.getAssetGet(), amountGetValue,orderReq.getAssetGive(),amountGiveValue,orderReq.getExpires(),randomid).send();
         dealWithReceipt(transactionReceipt);
         String orderHash =  transactionReceipt.getOutput();
@@ -116,6 +117,8 @@ public class ExchangeService {
         exchangeOrder.setRandom(randomid);
         exchangeOrder.setAssetGet(orderReq.getAssetGet());
         exchangeOrder.setAmountGet(amountGetValue);
+        exchangeOrder.setAssetGetShortName(assetGetShortName);
+        exchangeOrder.setAssetGiveShortName(assetGiveShortName);
         exchangeOrder.setAmountGetLeft(amountGetValue);
         exchangeOrder.setAssetGive(orderReq.getAssetGive());
         exchangeOrder.setAmountGive(amountGiveValue);

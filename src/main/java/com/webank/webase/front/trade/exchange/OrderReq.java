@@ -9,8 +9,10 @@ import java.math.BigInteger;
 public class OrderReq {
 
   private String assetGet;
+  private String assetGetShortName;
   private BigDecimal amountGet;
   private String assetGive;
+  private String assetGiveShortName;
   private BigDecimal amountGive;
   private BigInteger expires;
   private BigInteger assetGetMinUnit;
