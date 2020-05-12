@@ -251,4 +251,8 @@ public class AssetService {
     }
 
 
+    public List<AssetDO> findAssetByShortName(String shortName) {
+
+      return  assetRepository.findByShortNameLike(shortName);
+    }
 }

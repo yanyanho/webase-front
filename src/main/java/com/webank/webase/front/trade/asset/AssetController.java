@@ -86,4 +86,12 @@ public class AssetController {
         response.setData(assetList);
         return response;
     }
+
+    @GetMapping("/default-asset")
+    public BasePageResponse findAssetList( @RequestParam String shortName,  @RequestParam(defaultValue = "1") int groupId) throws FrontException {
+        List<AssetDO> assetList = assetService.findAssetByShortName(shortName);
+        BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
+        response.setData(assetList);
+        return response;
+    }
 }
