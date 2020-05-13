@@ -35,6 +35,6 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(500);
-        response.getWriter().write(JSON.toJSONString("failed"));
+        response.getWriter().write(JSON.toJSONString("log failed "+ ex.getMessage() ));
     }
 }

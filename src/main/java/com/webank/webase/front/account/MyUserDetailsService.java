@@ -42,7 +42,7 @@ public class MyUserDetailsService implements UserDetailsService {
         com.webank.webase.front.account.User user = userRepository.findByUsername(username);
 
         if (user == null) {
-        throw new UsernameNotFoundException(username);
+        throw new UsernameNotFoundException("username: " + username+ " not found");
        }
         // add role
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
