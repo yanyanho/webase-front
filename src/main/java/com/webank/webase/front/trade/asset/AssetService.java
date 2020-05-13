@@ -232,6 +232,21 @@ public class AssetService {
 
     }
 
+    public List<AssetDO> findDefaultAsset() {
+        Sort sort = new Sort(Sort.Direction.DESC, "shortName");
+
+        List<AssetDO> assetList = assetRepository.findAll(
+                (Root<AssetDO> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+
+                    Predicate predicate1 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"AAA-DEMO");
+                    Predicate predicate2 =   criteriaBuilder.equal(root.get("shortName").as(String.class),"BBB-DEMO");
+
+                    return criteriaBuilder.or(predicate1,predicate2);
+                }, sort);
+        return assetList;
+
+
+    }
 
 
 
