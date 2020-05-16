@@ -10,7 +10,9 @@ import com.webank.webase.front.trade.polo.BAC002;
 import com.webank.webase.front.trade.request.IssueReq;
 import com.webank.webase.front.trade.request.SendReq;
 import lombok.extern.slf4j.Slf4j;
+import org.fisco.bcos.web3j.abi.datatypes.Address;
 import org.fisco.bcos.web3j.crypto.Credentials;
+import org.fisco.bcos.web3j.crypto.WalletUtils;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,10 +88,16 @@ public class AssetService {
     private BAC001 getBAC001OnlyQueryChain(int groupId, String assetAddress) throws IOException {
         Web3j web3j = web3jMap.get(groupId);
         Credentials credentials = Credentials.create("2");
-        BAC001 bac001 = BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
-//            if(!bac001.isValid()) {
-//                throw new FrontException("contract load failed , please checkout contract address!");
-//            }
+        BAC001 bac001;
+        try {
+             bac001 = BAC001.load(assetAddress, web3j, credentials, contractGasProvider);
+        } catch (Exception e) {
+            throw new FrontException("contract address load failed , please check contract address!");
+        }
+
+            if(!bac001.isValid()) {
+                throw new FrontException("contract load failed , please checkout contract address!");
+            }
         return bac001;
     }
 
@@ -140,6 +148,9 @@ public class AssetService {
         if ("BAC001".equals(contractName)) {
             BAC001 bac001 = getBAC001(groupId, sendReq.getFrom(), contractAddress);
             String to = sendReq.getTo();
+            if(!WalletUtils.isValidAddress(to)) {
+                throw new FrontException("address is not right, please check!");
+            }
             String data = sendReq.getData();
             BigInteger minUnit = sendReq.getMinUnit();
             if (sendReq.getMinUnit() == null) {
@@ -251,8 +262,11 @@ public class AssetService {
 
 
     public List<AssetDO> findAssetByShortName(String shortName) {
-
-        return  assetRepository.findByShortNameLike((shortName).toUpperCase());
+        String assetAddress = "";
+        if(shortName.length() >=40){
+            assetAddress =  shortName;
+        }
+        return  assetRepository.find((shortName).toUpperCase(),assetAddress.toUpperCase());
     }
 
 
