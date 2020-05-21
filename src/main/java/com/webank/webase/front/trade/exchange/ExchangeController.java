@@ -1,9 +1,11 @@
 package com.webank.webase.front.trade.exchange;
 
+import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.trade.exchange.Order.ExchangeOrder;
 import com.webank.webase.front.trade.exchange.Order.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 
 @RestController
+@Slf4j
 @RequestMapping("/exchange")
 @Api(value = "ExchangeController", tags = "Account Infomation Query")
 public class ExchangeController {
@@ -62,6 +65,7 @@ public class ExchangeController {
                           @RequestParam(defaultValue = "1") int groupId,
                           @RequestParam String userAddress,
                           @RequestParam String exchangeContractAddress) throws Exception {
+        log.info(" orderReq:{}", JSON.toJSONString(orderReq));
 
         return exchangeService.order(orderReq,groupId,userAddress,exchangeContractAddress);
     }
