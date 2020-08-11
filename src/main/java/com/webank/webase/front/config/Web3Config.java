@@ -15,6 +15,7 @@ import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /*
@@ -67,6 +68,9 @@ public class Web3Config {
             channelConnectionsList.add(channelConnections);
 
         GroupChannelConnectionsConfig groupChannelConnectionsConfig = new GroupChannelConnectionsConfig();
+        groupChannelConnectionsConfig.setCaCert(new ClassPathResource("ca.crt"));
+        groupChannelConnectionsConfig.setSslCert(new ClassPathResource("node.crt"));
+        groupChannelConnectionsConfig.setSslKey(new ClassPathResource("node.key"));
         groupChannelConnectionsConfig.setAllChannelConnections(channelConnectionsList);
      return groupChannelConnectionsConfig;
     }
