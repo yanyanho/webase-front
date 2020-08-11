@@ -14,6 +14,9 @@
 package com.webank.webase.front.transaction;
 
 import static com.webank.webase.front.base.ConstantCode.GROUPID_NOT_EXIST;
+import static com.webank.webase.front.base.JsonUtils.stringToJsonNode;
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -51,8 +54,6 @@ import org.fisco.bcos.web3j.tx.exceptions.ContractCallException;
 import org.fisco.bcos.web3j.utils.Numeric;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webank.webase.front.base.ConstantCode;
 import com.webank.webase.front.base.Constants;
@@ -121,7 +122,7 @@ public class TransService {
 
         Object baseRsp = dealWithtrans(req);
         log.info("transHandle end. name:{} func:{} baseRsp:{}", req.getContractName(),
-                req.getFuncName(), JSON.toJSONString(baseRsp));
+                req.getFuncName(), toJSONString(baseRsp));
         return baseRsp;
     }
 
@@ -134,7 +135,7 @@ public class TransService {
         int groupId = req.getGroupId();
         int signUserId = req.getSignUserId();
         String contractAddress = req.getContractAddress();
-        String contractAbi = JSON.toJSONString(req.getContractAbi());
+        String contractAbi = toJSONString(req.getContractAbi());
         String funcName = req.getFuncName();
         List<Object> params = req.getFuncParam();
 
@@ -200,7 +201,7 @@ public class TransService {
         }
 
         log.info("transHandleWithSign end. func:{} baseRsp:{}", req.getFuncName(),
-                JSON.toJSONString(response));
+                toJSONString(response));
         return response;
     }
 
@@ -268,7 +269,7 @@ public class TransService {
      * @param req request
      */
     public Object dealWithtrans(ReqTransHandle req) throws FrontException {
-        log.info("dealWithtrans start. ReqTransHandle:[{}]", JSON.toJSONString(req));
+        log.info("dealWithtrans start. ReqTransHandle:[{}]", toJSONString(req));
         Object result = null;
         String contractName = req.getContractName();
         String version = req.getVersion();
@@ -412,7 +413,7 @@ public class TransService {
             byte[] signedMessage = TransactionEncoder.encode(rawTransaction, signData);
             signMsg = Numeric.toHexString(signedMessage);
         } else {
-            String chainId = (String) JSONObject.parseObject(versionContent).get("Chain Id");
+            String chainId = Constants.chainId;
             ExtendedRawTransaction extendedRawTransaction =
                     ExtendedRawTransaction.createTransaction(randomid, constants.GAS_PRICE,
                             constants.GAS_LIMIT, blockLimit, contractAddress, BigInteger.ZERO, data,

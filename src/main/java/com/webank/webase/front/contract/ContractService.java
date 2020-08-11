@@ -14,6 +14,7 @@
 package com.webank.webase.front.contract;
 
 import static com.webank.webase.front.base.ConstantCode.GROUPID_NOT_EXIST;
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 import static org.fisco.bcos.web3j.solidity.compiler.SolidityCompiler.Options.*;
 import static org.fisco.bcos.web3j.solidity.compiler.SolidityCompiler.Options.METADATA;
 
@@ -51,7 +52,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BaseResponse;
 import com.webank.webase.front.base.ConstantCode;
 import com.webank.webase.front.base.Constants;
@@ -110,7 +110,7 @@ public class ContractService {
         checkContractAbiExistedAndSave(contractName, address.substring(2), abiInfos);
         try {
             cnsServiceMap.get(req.getGroupId()).registerCns(contractName, address.substring(2),
-                    address, JSON.toJSONString(abiInfos));
+                    address,toJSONString(abiInfos));
         } catch (Exception ex) {
             log.error("fail sendAbi.", ex);
             throw new FrontException(ConstantCode.SEND_ABI_INFO_FAIL);
@@ -208,12 +208,12 @@ public class ContractService {
         if (version != null) {
             checkContractAbiExistedAndSave(contractName, version, abiInfos);
             cnsServiceMap.get(groupId).registerCns(contractName, version, contractAddress,
-                    JSON.toJSONString(abiInfos));
+                   toJSONString(abiInfos));
             cnsMap.put(contractName + ":" + version, contractAddress);
         } else {
             checkContractAbiExistedAndSave(contractName, contractAddress.substring(2), abiInfos);
             cnsServiceMap.get(groupId).registerCns(contractName, contractAddress.substring(2),
-                    contractAddress, JSON.toJSONString(abiInfos));
+                    contractAddress,toJSONString(abiInfos));
             cnsMap.put(contractName + ":" + contractAddress.substring(2), contractAddress);
         }
         log.info("success deploy. contractAddress:{}", contractAddress);
@@ -225,7 +225,7 @@ public class ContractService {
      */
     public String deployWithSign(ReqDeployWithSign req) throws Exception {
         int groupId = req.getGroupId();
-        String contractAbi = JSON.toJSONString(req.getContractAbi());
+        String contractAbi =toJSONString(req.getContractAbi());
         String contractBin = req.getContractBin();
         List<Object> params = req.getFuncParam();
 
@@ -367,7 +367,7 @@ public class ContractService {
 
         File abiFile = new File(Constants.ABI_DIR + Constants.DIAGONAL + contractName + ".abi");
         FrontUtils.createFileIfNotExist(abiFile, true);
-        FileUtils.writeStringToFile(abiFile, JSON.toJSONString(abiInfo));
+        FileUtils.writeStringToFile(abiFile,toJSONString(abiInfo));
         File binFile = new File(Constants.BIN_DIR + Constants.DIAGONAL + contractName + ".bin");
         FrontUtils.createFileIfNotExist(binFile, true);
         FileUtils.writeStringToFile(binFile, contractBin);
@@ -407,7 +407,7 @@ public class ContractService {
      * save contract data.
      */
     public Contract saveContract(ReqContractSave contractReq) {
-        log.debug("start saveContract contractReq:{}", JSON.toJSONString(contractReq));
+        log.debug("start saveContract contractReq:{}",toJSONString(contractReq));
         if (contractReq.getContractId() == null) {
             return newContract(contractReq);// new
         } else {

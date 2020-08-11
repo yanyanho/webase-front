@@ -1,6 +1,5 @@
 package com.webank.webase.front.account;
 
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BaseResponse;
 import com.webank.webase.front.base.ConstantCode;
 import lombok.Data;

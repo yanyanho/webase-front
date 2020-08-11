@@ -31,7 +31,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.AesUtils;
 import com.webank.webase.front.base.BaseResponse;
 import com.webank.webase.front.base.ConstantCode;
@@ -40,6 +39,8 @@ import com.webank.webase.front.base.enums.KeyTypes;
 import com.webank.webase.front.base.exception.FrontException;
 import com.webank.webase.front.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 
 /**
@@ -208,7 +209,7 @@ public class KeyStoreService {
                 String url = String.format(Constants.MGR_PRIVATE_KEY_URI, ipPort, user);
                 log.info("getPrivateKey url:{}", url);
                 BaseResponse response = restTemplate.getForObject(url, BaseResponse.class);
-                log.info("getPrivateKey response:{}", JSON.toJSONString(response));
+                log.info("getPrivateKey response:{}", toJSONString(response));
                 if (response.getCode() == 0) {
                     keyStoreInfo =
                         CommonUtils.object2JavaBean(response.getData(), KeyStoreInfo.class);
@@ -239,10 +240,10 @@ public class KeyStoreService {
             log.info("getSignDate url:{}", url);
             HttpHeaders headers = CommonUtils.buildHeaders();
             HttpEntity<String> formEntity =
-                    new HttpEntity<String>(JSON.toJSONString(params), headers);
+                    new HttpEntity<String>(toJSONString(params), headers);
             BaseResponse response =
                     restTemplate.postForObject(url, formEntity, BaseResponse.class);
-            log.info("getSignDate response:{}", JSON.toJSONString(response));
+            log.info("getSignDate response:{}", toJSONString(response));
             if (response.getCode() == 0) {
                 signInfo = CommonUtils.object2JavaBean(response.getData(), SignInfo.class);
             }

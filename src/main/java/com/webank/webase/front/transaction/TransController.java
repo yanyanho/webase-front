@@ -1,6 +1,5 @@
 package com.webank.webase.front.transaction;
 
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BaseController;
 import com.webank.webase.front.base.exception.FrontException;
 import io.swagger.annotations.Api;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.webank.webase.front.base.ConstantCode.VERSION_AND_ADDRESS_CANNOT_ALL_BE_NULL;
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -58,7 +58,7 @@ public class TransController extends BaseController {
     @ApiImplicitParam(name = "reqTransHandle", value = "transaction info", required = true, dataType = "ReqTransHandle")
     @PostMapping("/handle")
     public Object transHandle(@Valid @RequestBody ReqTransHandle reqTransHandle, BindingResult result) throws Exception {
-        log.info("transHandle start. ReqTransHandle:[{}]", JSON.toJSONString(reqTransHandle));
+        log.info("transHandle start. ReqTransHandle:[{}]", toJSONString(reqTransHandle));
         checkParamResult(result);
         if (StringUtils.isBlank(reqTransHandle.getVersion()) && StringUtils.isBlank(reqTransHandle.getContractAddress())) {
             throw new FrontException(VERSION_AND_ADDRESS_CANNOT_ALL_BE_NULL);
@@ -78,7 +78,7 @@ public class TransController extends BaseController {
     @ApiImplicitParam(name = "req", value = "transaction info", required = true, dataType = "ReqTransHandleWithSign")
     @PostMapping("/handleWithSign")
     public Object transHandleWithSign(@Valid @RequestBody ReqTransHandleWithSign req, BindingResult result) throws Exception {
-        log.info("transHandleWithSign start. req:[{}]", JSON.toJSONString(req));
+        log.info("transHandleWithSign start. req:[{}]", toJSONString(req));
         checkParamResult(result);
         return transServiceImpl.transHandleWithSign(req);
     }

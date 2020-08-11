@@ -69,8 +69,10 @@ public interface ConstantCode {
     /* system error */
     RetCode SYSTEM_ERROR = RetCode.mark(101001, "system error");
     RetCode PARAM_VAILD_FAIL = RetCode.mark(101002, "param valid fail");
-
+    public static final RetCode PARAM_ERROR = RetCode.mark(201200,"params not fit");
     public static final RetCode USER_NOT_LOGGED_IN = RetCode.mark(302000, "user not logged in");
     public static final RetCode ACCESS_DENIED = RetCode.mark(302001, "access denied");
+    public static final RetCode PARAM_FAIL_ABI_INVALID = RetCode.mark(201248, "Contract abi invalid, please check abi");
+    public static final RetCode FAIL_PARSE_JSON = RetCode.mark(201050, "Fail to parse json");
 
 }

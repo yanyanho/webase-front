@@ -1,6 +1,5 @@
 package com.webank.webase.front.trade.exchange;
 
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.trade.exchange.Order.ExchangeOrder;
 import com.webank.webase.front.trade.exchange.Order.OrderService;
 import io.swagger.annotations.Api;
@@ -13,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 
 @RestController
@@ -65,7 +66,7 @@ public class ExchangeController {
                           @RequestParam(defaultValue = "1") int groupId,
                           @RequestParam String userAddress,
                           @RequestParam String exchangeContractAddress) throws Exception {
-        log.info(" orderReq:{}", JSON.toJSONString(orderReq));
+        log.info(" orderReq:{}", toJSONString(orderReq));
 
         return exchangeService.order(orderReq,groupId,userAddress,exchangeContractAddress);
     }

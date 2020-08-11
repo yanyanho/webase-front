@@ -13,7 +13,6 @@
  */
 package com.webank.webase.front.base;
 
-import com.alibaba.fastjson.JSON;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -27,6 +26,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+
+import static com.webank.webase.front.base.JsonUtils.stringToObj;
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 /**
  * comment method.
@@ -80,9 +82,9 @@ public class FrontUtils {
             log.warn("object2JavaBean. obj or clazz null");
             return null;
         }
-        String jsonStr = JSON.toJSONString(obj);
+        String jsonStr = toJSONString(obj);
 
-        return JSON.parseObject(jsonStr, clazz);
+        return stringToObj(jsonStr, clazz);
     }
 
 

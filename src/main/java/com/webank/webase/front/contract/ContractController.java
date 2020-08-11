@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BaseController;
 import com.webank.webase.front.base.BasePageResponse;
 import com.webank.webase.front.base.BaseResponse;
@@ -48,6 +47,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 
 /**
@@ -73,7 +74,7 @@ public class ContractController extends BaseController {
     @PostMapping("/deploy")
     public String deploy(@Valid @RequestBody ReqDeploy reqDeploy, BindingResult result)
         throws Exception {
-        log.info("contract deploy start. ReqDeploy:[{}]", JSON.toJSONString(reqDeploy));
+        log.info("contract deploy start. ReqDeploy:[{}]", toJSONString(reqDeploy));
         checkParamResult(result);
         String contractAddress = contractService.caseDeploy(reqDeploy);
         log.info("success deploy. result:{}", contractAddress);
@@ -91,7 +92,7 @@ public class ContractController extends BaseController {
     @PostMapping("/deployWithSign")
     public String deployWithSign(@Valid @RequestBody ReqDeployWithSign reqDeploy, BindingResult result)
             throws Exception {
-        log.info("contract deployWithSign start. ReqDeploy:[{}]", JSON.toJSONString(reqDeploy));
+        log.info("contract deployWithSign start. ReqDeploy:[{}]", toJSONString(reqDeploy));
         checkParamResult(result);
         String contractAddress = contractService.deployWithSign(reqDeploy);
         log.info("success deployWithSign. result:{}", contractAddress);
@@ -111,7 +112,7 @@ public class ContractController extends BaseController {
     public ResponseEntity<InputStreamResource> compileJavaFile(
         @Valid @RequestBody ReqSendAbi param,
         BindingResult result) throws FrontException, IOException {
-        log.info("compileJavaFile start. reqSendAbi:{}", JSON.toJSONString(param));
+        log.info("compileJavaFile start. reqSendAbi:{}", toJSONString(param));
         checkParamResult(result);
         FileContent fileContent = contractService
             .compileToJavaFile(param.getContractName(), param.getAbiInfo(), param.getContractBin(),
@@ -143,7 +144,7 @@ public class ContractController extends BaseController {
     @PostMapping("/abiInfo")
     public ResponseEntity sendAbi(@Valid @RequestBody ReqSendAbi reqSendAbi, BindingResult result)
         throws FrontException {
-        log.info("sendAbi start. ReqSendAbi:[{}]", JSON.toJSONString(reqSendAbi));
+        log.info("sendAbi start. ReqSendAbi:[{}]", toJSONString(reqSendAbi));
         checkParamResult(result);
         if (Objects.isNull(reqSendAbi.getGroupId())) {
             log.warn("fail sendAbi. groupId is null");
@@ -185,7 +186,7 @@ public class ContractController extends BaseController {
     @PostMapping(value = "/save")
     public Contract saveContract(@RequestBody @Valid ReqContractSave contract, BindingResult result)
         throws FrontException {
-        log.info("saveContract start. contract:{}", JSON.toJSONString(contract));
+        log.info("saveContract start. contract:{}", toJSONString(contract));
         checkParamResult(result);
         return contractService.saveContract(contract);
     }
@@ -213,7 +214,7 @@ public class ContractController extends BaseController {
     @PostMapping(value = "/contractList")
     public BasePageResponse findByPage(@RequestBody @Valid ReqPageContract req,
         BindingResult result) throws FrontException {
-        log.info("findByPage start. ReqPageContract:{}", JSON.toJSONString(req));
+        log.info("findByPage start. ReqPageContract:{}", toJSONString(req));
         checkParamResult(result);
         Page<Contract> page = contractService.findContractByPage(req);
         BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
@@ -244,7 +245,7 @@ public class ContractController extends BaseController {
     @PostMapping(value = "/contractCompile")
     public RspContractCompile contractCompile(@RequestBody @Valid ReqContractCompile req,
                                               BindingResult result) throws FrontException {
-        log.info("contractCompile start. param:{}", JSON.toJSONString(req));
+        log.info("contractCompile start. param:{}", toJSONString(req));
         checkParamResult(result);
 
         return contractService.contractCompile(req.getSolidityName(), req.getSolidityBase64());

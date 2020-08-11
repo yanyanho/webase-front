@@ -15,7 +15,6 @@
  */
 package com.webank.webase.front.config.security;
 
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BaseResponse;
 import com.webank.webase.front.base.ConstantCode;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
+
 @Slf4j
 @Component
 public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -41,7 +42,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
         BaseResponse baseResponse = new BaseResponse(ConstantCode.USER_NOT_LOGGED_IN);
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(405);
-        response.getWriter().write(JSON.toJSONString(baseResponse));
+        response.getWriter().write(toJSONString(baseResponse));
     }
 
 }

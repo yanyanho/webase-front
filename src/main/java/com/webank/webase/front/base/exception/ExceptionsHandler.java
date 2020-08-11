@@ -15,19 +15,19 @@
  */
 package com.webank.webase.front.base.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 
 /**
@@ -76,7 +76,7 @@ public class ExceptionsHandler {
         //  map.put("exception", frontException);
         map.put("errorMessage", ex.getMessage());
         map.put("code", 400);
-        log.warn("typeMismatchException return:{}", JSON.toJSONString(map));
+        log.warn("typeMismatchException return:{}", toJSONString(map));
         return ResponseEntity.status(400).body(map);
     }
 
@@ -89,7 +89,7 @@ public class ExceptionsHandler {
         //  map.put("exception", frontException);
         map.put("errorMessage", ex.getMessage());
         map.put("code", 400);
-        log.warn("bindExceptionHandler return:{}", JSON.toJSONString(map));
+        log.warn("bindExceptionHandler return:{}",toJSONString(map));
         return ResponseEntity.status(400).body(map);
     }
 

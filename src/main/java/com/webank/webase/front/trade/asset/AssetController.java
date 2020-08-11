@@ -1,6 +1,5 @@
 package com.webank.webase.front.trade.asset;
 
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.BasePageResponse;
 import com.webank.webase.front.base.ConstantCode;
 import com.webank.webase.front.base.exception.FrontException;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 
 @Api(value = "/asset", tags = "asset interface")
@@ -70,7 +71,7 @@ public class AssetController {
     @ApiImplicitParam(name = "req", value = "param info", required = true, dataType = "ReqPageAsset")
     @PostMapping(value = "/assetList")
     public BasePageResponse findByPage(@RequestBody ReqPageAsset req) throws FrontException {
-        log.info("findByPage start. ReqPageAsset:{}", JSON.toJSONString(req));
+        log.info("findByPage start. ReqPageAsset:{}",toJSONString(req));
         Page<AssetDO> page = assetService.findAssetByPage(req);
         BasePageResponse response = new BasePageResponse(ConstantCode.RET_SUCCEED);
         response.setTotalCount(page.getTotalElements());

@@ -18,7 +18,6 @@ import org.fisco.bcos.web3j.abi.datatypes.generated.AbiTypes;
 import org.fisco.bcos.web3j.protocol.ObjectMapperFactory;
 import org.fisco.bcos.web3j.protocol.core.methods.response.AbiDefinition;
 import org.fisco.bcos.web3j.protocol.core.methods.response.AbiDefinition.NamedType;
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -29,6 +28,8 @@ import com.webank.webase.front.base.FrontUtils;
 import com.webank.webase.front.base.exception.FrontException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -265,7 +266,7 @@ public class ContractAbiUtil {
             outputStream = new FileOutputStream(file);
 
             //todo
-            outputStream.write(JSON.toJSONString(abiDefinitionList).getBytes());
+            outputStream.write(toJSONString(abiDefinitionList).getBytes());
             outputStream.flush();
             log.info(file.getName()+"file create successfully");
         } catch (IOException e) {

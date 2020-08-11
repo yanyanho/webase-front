@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,11 +14,11 @@
 
 package com.webank.webase.front.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import com.webank.webase.front.base.ConstantCode;
+import com.webank.webase.front.base.JsonUtils;
+import com.webank.webase.front.base.exception.FrontException;
+import lombok.extern.slf4j.Slf4j;
 import org.fisco.bcos.web3j.abi.EventValues;
 import org.fisco.bcos.web3j.abi.TypeReference;
 import org.fisco.bcos.web3j.abi.datatypes.DynamicArray;
@@ -30,14 +30,17 @@ import org.fisco.bcos.web3j.protocol.core.methods.response.Log;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.fisco.bcos.web3j.tx.Contract;
 import org.fisco.bcos.web3j.tx.txdecode.ConstantProperties;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.webank.webase.front.base.exception.FrontException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ContractAbiUtil.
- * 
+ * format abi types from String
  */
+@Slf4j
 public class AbiUtil {
 
     /**
@@ -47,10 +50,9 @@ public class AbiUtil {
      * @return
      */
     public static AbiDefinition getAbiDefinition(String contractAbi) {
-        JSONArray abiArr = JSONArray.parseArray(contractAbi);
+        List<AbiDefinition> abiArr = JsonUtils.toJavaObjectList(contractAbi, AbiDefinition.class);
         AbiDefinition result = null;
-        for (Object object : abiArr) {
-            AbiDefinition abiDefinition = JSON.parseObject(object.toString(), AbiDefinition.class);
+        for (AbiDefinition abiDefinition : abiArr) {
             if (ConstantProperties.TYPE_CONSTRUCTOR.equals(abiDefinition.getType())) {
                 result = abiDefinition;
                 break;
@@ -67,10 +69,9 @@ public class AbiUtil {
      * @return
      */
     public static AbiDefinition getAbiDefinition(String name, String contractAbi) {
-        JSONArray abiArr = JSONArray.parseArray(contractAbi);
+        List<AbiDefinition> abiArr = JsonUtils.toJavaObjectList(contractAbi, AbiDefinition.class);
         AbiDefinition result = null;
-        for (Object object : abiArr) {
-            AbiDefinition abiDefinition = JSON.parseObject(object.toString(), AbiDefinition.class);
+        for (AbiDefinition abiDefinition : abiArr) {
             if (ConstantProperties.TYPE_FUNCTION.equals(abiDefinition.getType())
                     && name.equals(abiDefinition.getName())) {
                 result = abiDefinition;
@@ -87,10 +88,9 @@ public class AbiUtil {
      * @return
      */
     public static List<AbiDefinition> getEventAbiDefinitions(String contractAbi) {
-        JSONArray abiArr = JSONArray.parseArray(contractAbi);
+        List<AbiDefinition> abiArr = JsonUtils.toJavaObjectList(contractAbi, AbiDefinition.class);
         List<AbiDefinition> result = new ArrayList<>();
-        for (Object object : abiArr) {
-            AbiDefinition abiDefinition = JSON.parseObject(object.toString(), AbiDefinition.class);
+        for (AbiDefinition abiDefinition : abiArr) {
             if (ConstantProperties.TYPE_EVENT.equals(abiDefinition.getType())) {
                 result.add(abiDefinition);
             } 
@@ -143,10 +143,15 @@ public class AbiUtil {
         for (int i = 0; i < funcInputTypes.size(); i++) {
             Class<? extends Type> inputType = null;
             Object input = null;
-            if (funcInputTypes.get(i).indexOf("[") != -1
-                    && funcInputTypes.get(i).indexOf("]") != -1) {
-                List<Object> arrList =
-                        new ArrayList<>(Arrays.asList(params.get(i).toString().split(",")));
+            if (funcInputTypes.get(i).contains("[")
+                    && funcInputTypes.get(i).contains("]")) {
+                List<Object> arrList;
+                try {
+                    arrList = (List<Object>) params.get(i);
+                } catch (ClassCastException e) {
+                    log.error("params of index {} parse List error: {}", i, params.get(i));
+                    throw new FrontException(ConstantCode.PARAM_ERROR);
+                }
                 List<Type> arrParams = new ArrayList<>();
                 for (int j = 0; j < arrList.size(); j++) {
                     inputType = AbiTypes.getType(
@@ -179,8 +184,8 @@ public class AbiUtil {
         for (int i = 0; i < funOutputTypes.size(); i++) {
             Class<? extends Type> outputType = null;
             TypeReference<?> typeReference = null;
-            if (funOutputTypes.get(i).indexOf("[") != -1
-                    && funOutputTypes.get(i).indexOf("]") != -1) {
+            if (funOutputTypes.get(i).contains("[")
+                    && funOutputTypes.get(i).contains("]")) {
                 typeReference = ContractTypeUtil.getArrayType(
                         funOutputTypes.get(i).substring(0, funOutputTypes.get(i).indexOf("[")));
             } else {
@@ -199,15 +204,15 @@ public class AbiUtil {
      * @param typeList list
      * @return
      */
-    public static Object callResultParse(List<String> funOutputTypes, List<Type> typeList) 
-            throws FrontException {
+    public static Object callResultParse(List<String> funOutputTypes, List<Type> typeList)
+        throws FrontException {
         if (funOutputTypes.size() == typeList.size()) {
             List<Object> result = new ArrayList<>();
             for (int i = 0; i < funOutputTypes.size(); i++) {
                 Class<? extends Type> outputType = null;
                 Object value = null;
-                if (funOutputTypes.get(i).indexOf("[") != -1
-                        && funOutputTypes.get(i).indexOf("]") != -1) {
+                if (funOutputTypes.get(i).contains("[")
+                        && funOutputTypes.get(i).contains("]")) {
                     List<Object> values = new ArrayList<>();
                     List<Type> results = (List<Type>) typeList.get(i).getValue();
                     for (int j = 0; j < results.size(); j++) {
@@ -223,7 +228,7 @@ public class AbiUtil {
                     result.add(value);
                 }
             }
-            return JSON.parse(JSON.toJSONString(result));
+            return JsonUtils.toJavaObject(JsonUtils.toJSONString(result), Object.class);
         }
         throw new FrontException("output parameter not match");
     }
@@ -235,8 +240,8 @@ public class AbiUtil {
      * @param abiList info
      * @return
      */
-    public static Object receiptParse(TransactionReceipt receipt, List<AbiDefinition> abiList) 
-            throws FrontException {
+    public static Object receiptParse(TransactionReceipt receipt, List<AbiDefinition> abiList)
+        throws FrontException {
         Map<String, Object> resultMap = new HashMap<>();
         List<Log> logList = receipt.getLogs();
         for (AbiDefinition abiDefinition : abiList) {
@@ -257,5 +262,18 @@ public class AbiUtil {
             }
         }
         return resultMap;
+    }
+
+    /**
+     * check abi valid
+     * @param contractAbi
+     */
+    public static List<AbiDefinition> checkAbi(String contractAbi) {
+        try {
+            List<AbiDefinition> abiArr = JsonUtils.toJavaObjectList(contractAbi, AbiDefinition.class);
+            return abiArr;
+        } catch (Exception ex) {
+            throw new FrontException(ConstantCode.PARAM_FAIL_ABI_INVALID);
+        }
     }
 }

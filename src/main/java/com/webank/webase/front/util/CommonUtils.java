@@ -34,9 +34,11 @@ import org.fisco.bcos.web3j.crypto.Sign.SignatureData;
 import org.fisco.bcos.web3j.utils.Numeric;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import com.alibaba.fastjson.JSON;
 import com.webank.webase.front.base.exception.FrontException;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.webank.webase.front.base.JsonUtils.stringToObj;
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
 
 /**
  * CommonUtils.
@@ -256,8 +258,8 @@ public class CommonUtils {
             log.warn("Object2JavaBean. obj or clazz null");
             return null;
         }
-        String jsonStr = JSON.toJSONString(obj);
-        return JSON.parseObject(jsonStr, clazz);
+        String jsonStr = toJSONString(obj);
+        return stringToObj(jsonStr, clazz);
     }
 
     /**

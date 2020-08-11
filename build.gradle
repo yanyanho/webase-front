@@ -55,13 +55,12 @@ List logger = [
 dependencies {
     compile spring_boot,swagger,logger
 
-	compile 'org.fisco-bcos:web3sdk:2.1.0'
+	compile 'org.fisco-bcos:web3sdk:2.5.0'
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
 	//compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '1.5.9.RELEASE'
 
 	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8'
-	compile 'com.alibaba:fastjson:1.2.67'
 	compile 'com.h2database:h2:1.4.197'
     compile 'org.fusesource:sigar:1.6.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.6'

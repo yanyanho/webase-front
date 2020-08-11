@@ -1,13 +1,16 @@
 package com.webank.webase.front.base;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
 import com.webank.webase.front.base.exception.FrontException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+
+import java.util.List;
+
+import static com.webank.webase.front.base.JsonUtils.toJSONString;
+import static com.webank.webase.front.base.JsonUtils.toJavaObject;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -49,8 +52,7 @@ public abstract class BaseController {
 
         RetCode retCode = null;
         try {
-            JSONObject jsonObject = JSON.parseObject(errorMsg);
-            retCode = JSONObject.toJavaObject(jsonObject, RetCode.class);
+            retCode = toJavaObject(errorMsg, RetCode.class);
         } catch (Exception ex) {
             log.warn("OnWarning:retCodeJson convert error");
             throw new FrontException(ConstantCode.PARAM_VAILD_FAIL);
@@ -61,7 +63,7 @@ public abstract class BaseController {
 
     private String getParamValidFaildMessage(BindingResult bindingResult) {
         List<ObjectError> errorList = bindingResult.getAllErrors();
-        log.info("errorList:{}", JSON.toJSONString(errorList));
+        log.info("errorList:{}", toJSONString(errorList));
         if (errorList == null) {
             log.warn("onWarning:errorList is empty!");
             return null;
